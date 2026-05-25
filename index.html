@@ -17,6 +17,7 @@
   --amber:     #E8A245;
   --teal:      #4ECFB0;
   --purple:    #9B8FE8;
+  --green:     #72C55A;
   --text:      #F0E2D0;
   --muted:     #7A6A5A;
   --red:       #E05A5A;
@@ -38,8 +39,9 @@ body {
   align-items: center;
   padding: 0.9rem 2rem;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
-
 .app-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.2rem;
@@ -48,13 +50,7 @@ body {
   align-items: center;
   gap: 0.6rem;
 }
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
+.topbar-right { display: flex; align-items: center; gap: 0.75rem; }
 .clock-display {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
@@ -66,22 +62,18 @@ body {
   border-radius: 50px;
   border: 1px solid var(--border);
 }
-
-.sound-btn {
+.icon-btn {
   background: none;
   border: 1px solid var(--border);
   color: var(--muted);
-  width: 34px;
-  height: 34px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.sound-btn:hover { border-color: var(--amber); color: var(--amber); }
+.icon-btn:hover { border-color: var(--amber); color: var(--amber); }
 
 /* ── Main layout ── */
 .main {
@@ -90,13 +82,12 @@ body {
   grid-template-columns: 1fr 1fr;
   min-height: 0;
 }
-
 @media (max-width: 720px) {
   .main { grid-template-columns: 1fr; }
   .panel-timer { border-right: none; border-bottom: 1px solid var(--border); }
 }
 
-/* ── LEFT: Timer ── */
+/* ── LEFT: Timer panel ── */
 .panel-timer {
   padding: 2rem 1.5rem;
   border-right: 1px solid var(--border);
@@ -114,7 +105,6 @@ body {
   padding: 4px;
   border-radius: 50px;
 }
-
 .mode-tab {
   padding: 0.38rem 0.9rem;
   border-radius: 50px;
@@ -128,101 +118,58 @@ body {
   transition: all 0.25s;
   white-space: nowrap;
 }
-
 .mode-tab.active[data-mode="focus"]     { background: var(--amber);  color: #17100D; }
 .mode-tab.active[data-mode="break"]     { background: var(--teal);   color: #17100D; }
 .mode-tab.active[data-mode="longBreak"] { background: var(--purple); color: #17100D; }
 
 /* Timer circle */
-.timer-wrap {
-  position: relative;
-  width: 230px;
-  height: 230px;
-}
-
+.timer-wrap { position: relative; width: 230px; height: 230px; }
 .timer-svg { transform: rotate(-90deg); display: block; }
 .timer-track { fill: none; stroke: var(--surface2); stroke-width: 7; }
-
 .timer-arc {
   fill: none;
   stroke-width: 7;
   stroke-linecap: round;
-  stroke-dasharray: 534.07; /* 2π × 85 */
+  stroke-dasharray: 534.07;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1), stroke 0.4s;
 }
-
 .timer-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
 }
-
 .timer-digits {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 3.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
+  font-size: 3.2rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1;
   transition: color 0.4s;
 }
-
-.timer-mode-label {
-  font-size: 0.65rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-
+.timer-mode-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
 .timer-running-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--amber);
-  opacity: 0;
-  transition: opacity 0.3s;
+  width: 6px; height: 6px; border-radius: 50%;
+  opacity: 0; transition: opacity 0.3s;
   animation: blink 1.2s step-end infinite;
 }
-
 .timer-running-dot.visible { opacity: 1; }
-
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 /* Controls */
-.controls {
-  display: flex;
-  gap: 0.65rem;
-  align-items: center;
-}
-
+.controls { display: flex; gap: 0.65rem; align-items: center; }
 .btn-icon {
   width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); border-radius: 50%;
+  cursor: pointer; font-size: 1rem;
+  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
 }
 .btn-icon:hover { background: var(--surface2); color: var(--text); }
 .btn-icon:active { transform: scale(0.95); }
-
 .btn-main {
-  padding: 0.65rem 2.2rem;
-  border: none;
-  border-radius: 50px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.02em;
+  padding: 0.65rem 2.2rem; border: none; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
 }
 .btn-main:active { transform: scale(0.97); }
 .btn-focus    { background: var(--amber);  color: #17100D; }
@@ -230,332 +177,281 @@ body {
 .btn-longbreak{ background: var(--purple); color: #17100D; }
 
 /* Sessions */
-.sessions-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.sessions-label {
-  font-size: 0.65rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-.sessions-dots {
-  display: flex;
-  gap: 8px;
-}
+.sessions-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.sessions-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.sessions-dots { display: flex; gap: 8px; align-items: center; }
 .sdot {
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
   transition: all 0.35s;
 }
 .sdot.done { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 6px rgba(232,162,69,0.4); }
+/* Physical session indicator between dots */
+.phys-indicator {
+  width: 14px; height: 14px; border-radius: 3px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; transition: all 0.35s; opacity: 0.4;
+}
+.phys-indicator.upcoming { opacity: 1; border-color: rgba(114,197,90,0.5); }
+.phys-indicator.done { background: rgba(114,197,90,0.25); border-color: var(--green); opacity: 1; }
 
 /* Settings */
 .settings-toggle {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 0.38rem 1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.75rem;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); padding: 0.38rem 1rem; border-radius: 50px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
 }
 .settings-toggle:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-
 .settings-panel {
-  width: 100%;
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 1.25rem;
-  display: none;
-  border: 1px solid var(--border);
+  width: 100%; background: var(--surface); border-radius: 14px;
+  padding: 1.25rem; display: none; border: 1px solid var(--border);
 }
 .settings-panel.open { display: block; animation: fadeIn 0.2s ease; }
-
-@keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
-
+@keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
 .settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;
 }
-
+.settings-grid-4 {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;
+}
 .setting-item label {
-  display: block;
-  font-size: 0.65rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 5px;
+  display: block; font-size: 0.62rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px;
 }
-
 .setting-item input[type="number"] {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.5rem 0.5rem;
-  border-radius: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 0.5rem 0.5rem; border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700;
+  text-align: center; outline: none; transition: border-color 0.2s;
   -moz-appearance: textfield;
 }
 .setting-item input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 .setting-item input[type="number"]:focus { border-color: var(--amber); }
-
+.setting-item .unit { font-size: 0.6rem; color: var(--muted); text-align: center; margin-top: 3px; }
+.settings-divider {
+  font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 0.6rem 0 0.5rem; display: flex; align-items: center; gap: 8px;
+}
+.settings-divider::before, .settings-divider::after {
+  content:''; flex:1; height: 1px; background: var(--border);
+}
 .settings-apply {
-  width: 100%;
-  padding: 0.55rem;
-  background: rgba(232,162,69,0.12);
-  border: 1px solid rgba(232,162,69,0.3);
-  color: var(--amber);
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 100%; padding: 0.55rem;
+  background: rgba(232,162,69,0.12); border: 1px solid rgba(232,162,69,0.3);
+  color: var(--amber); border-radius: 8px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
 }
 .settings-apply:hover { background: rgba(232,162,69,0.2); }
 
-/* ── RIGHT panel ── */
-.panel-right {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Tasks section */
+/* ── RIGHT: Tasks + Tips ── */
+.panel-right { display: flex; flex-direction: column; overflow: hidden; }
 .section-tasks {
   padding: 1.5rem 1.75rem;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 1rem;
+  display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;
 }
-
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.95rem;
-  font-style: italic;
-  color: var(--muted);
-}
-
-.task-counter {
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.task-input-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 0.75rem;
-}
-
+.section-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-style: italic; color: var(--muted); }
+.task-counter { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.task-input-row { display: flex; gap: 8px; margin-bottom: 0.75rem; }
 .task-input {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.5rem 0.8rem;
-  border-radius: 9px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.2s;
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); padding: 0.5rem 0.8rem; border-radius: 9px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s;
 }
 .task-input::placeholder { color: var(--muted); }
 .task-input:focus { border-color: rgba(232,162,69,0.4); }
-
 .btn-add {
-  width: 36px; height: 36px;
-  background: var(--amber);
-  color: #17100D;
-  border: none;
-  border-radius: 9px;
-  cursor: pointer;
-  font-size: 1.3rem;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
+  width: 36px; height: 36px; background: var(--amber); color: #17100D;
+  border: none; border-radius: 9px; cursor: pointer; font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s;
 }
 .btn-add:hover { opacity: 0.85; }
 .btn-add:active { transform: scale(0.93); }
-
 .task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 190px;
-  overflow-y: auto;
-  padding-right: 2px;
+  display: flex; flex-direction: column; gap: 6px;
+  max-height: 190px; overflow-y: auto; padding-right: 2px;
 }
-
-.task-empty {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.8rem;
-  padding: 1.25rem 0;
-  font-style: italic;
-}
-
+.task-empty { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 1.25rem 0; font-style: italic; }
 .task-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 0.55rem 0.7rem;
-  background: var(--surface);
-  border-radius: 9px;
-  border: 1px solid var(--border);
-  transition: all 0.2s;
-  animation: slideIn 0.18s ease;
+  display: flex; align-items: center; gap: 9px;
+  padding: 0.55rem 0.7rem; background: var(--surface);
+  border-radius: 9px; border: 1px solid var(--border);
+  transition: all 0.2s; animation: slideIn 0.18s ease;
 }
 @keyframes slideIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
-
 .task-item.done { opacity: 0.4; }
-
 .task-check {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
-  position: relative;
 }
 .task-check:hover { border-color: var(--amber); }
 .task-item.done .task-check { background: var(--amber); border-color: var(--amber); }
-.task-item.done .task-check::after {
-  content: '✓';
-  color: #17100D;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.task-text {
-  flex: 1;
-  font-size: 0.85rem;
-  color: var(--text);
-  line-height: 1.35;
-  word-break: break-word;
-}
+.task-item.done .task-check::after { content:'✓'; color:#17100D; font-size:9px; font-weight:700; }
+.task-text { flex:1; font-size:0.85rem; color:var(--text); line-height:1.35; word-break:break-word; }
 .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
-
 .task-del {
-  background: none;
-  border: none;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 0.75rem;
-  padding: 2px 4px;
-  border-radius: 4px;
-  opacity: 0;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: 0.75rem; padding: 2px 4px;
+  border-radius: 4px; opacity: 0; transition: all 0.2s; flex-shrink: 0;
 }
 .task-item:hover .task-del { opacity: 1; }
 .task-del:hover { color: var(--red); }
 
-/* Tips section */
-.section-tips {
-  padding: 1.25rem 1.75rem;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.tips-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-top: 0.9rem;
-}
-
+/* Tips */
+.section-tips { padding: 1.25rem 1.75rem; flex:1; overflow-y: auto; }
+.tips-grid { display: flex; flex-direction: column; gap: 7px; margin-top: 0.9rem; }
 .tip-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0.6rem 0.8rem;
-  background: var(--surface);
-  border-radius: 10px;
-  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0.6rem 0.8rem; background: var(--surface);
+  border-radius: 10px; border: 1px solid var(--border);
   transition: all 0.2s;
-  cursor: default;
 }
 .tip-item:hover { background: var(--surface2); }
+.tip-icon-wrap { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.tip-text { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
 
-.tip-icon-wrap {
-  width: 30px; height: 30px;
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
+/* ══════════════════════════════════════════════
+   PHYSICAL SESSION OVERLAY
+══════════════════════════════════════════════ */
+.phys-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: #0E1A14;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: overlayIn 0.4s cubic-bezier(.4,0,.2,1);
+}
+.phys-overlay.active { display: flex; }
+@keyframes overlayIn { from{opacity:0;transform:scale(0.97)} to{opacity:1;transform:none} }
+
+.phys-topbar {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid rgba(114,197,90,0.12);
+}
+.phys-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--green);
+}
+.phys-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+  animation: blink 1s step-end infinite;
+}
+.phys-total-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem; color: rgba(114,197,90,0.5);
+  letter-spacing: 0.06em;
 }
 
-.tip-text {
-  font-size: 0.78rem;
-  color: var(--muted);
-  line-height: 1.4;
+.phys-body {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1.5rem;
+  text-align: center; padding: 1rem 2rem;
+  max-width: 480px; width: 100%;
+}
+
+/* Exercise ring */
+.phys-ring-wrap { position: relative; width: 200px; height: 200px; }
+.phys-ring-svg { transform: rotate(-90deg); display: block; }
+.phys-ring-track { fill: none; stroke: rgba(114,197,90,0.1); stroke-width: 5; }
+.phys-ring-arc {
+  fill: none; stroke: var(--green); stroke-width: 5; stroke-linecap: round;
+  stroke-dasharray: 503.55; /* 2π × 80 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.8s linear;
+}
+.phys-ring-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px;
+}
+.phys-exercise-icon { font-size: 3rem; line-height: 1; }
+.phys-ring-timer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2rem; font-weight: 300;
+  color: rgba(114,197,90,0.6); letter-spacing: 0.04em;
+}
+
+/* Exercise info */
+.phys-exercise-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; font-weight: 600; color: #D0EDD8;
+  line-height: 1.2;
+}
+.phys-exercise-desc {
+  font-size: 0.9rem; color: rgba(208,237,216,0.55);
+  line-height: 1.6; max-width: 340px;
+}
+.phys-exercise-tip {
+  font-size: 0.75rem; color: rgba(114,197,90,0.4);
+  font-style: italic;
+}
+
+/* Exercise progress dots */
+.phys-progress-dots {
+  display: flex; gap: 6px; align-items: center;
+}
+.phdot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(114,197,90,0.15);
+  transition: all 0.3s;
+}
+.phdot.active { background: var(--green); width: 18px; border-radius: 3px; }
+.phdot.done { background: rgba(114,197,90,0.4); }
+
+/* Controls */
+.phys-controls { display: flex; gap: 0.75rem; align-items: center; margin-top: 0.5rem; }
+.phys-btn-next {
+  padding: 0.6rem 1.6rem; border: 1px solid rgba(114,197,90,0.35);
+  background: rgba(114,197,90,0.1); color: var(--green);
+  border-radius: 50px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+}
+.phys-btn-next:hover { background: rgba(114,197,90,0.18); }
+.phys-btn-skip {
+  padding: 0.6rem 1.2rem; border: 1px solid var(--border);
+  background: none; color: var(--muted);
+  border-radius: 50px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+}
+.phys-btn-skip:hover { color: var(--text); }
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 1.75rem; left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 0.6rem 1.4rem; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem;
+  z-index: 999; opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; white-space: nowrap;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
-
-/* Toast */
-#toast {
-  position: fixed;
-  bottom: 1.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.6rem 1.4rem;
-  border-radius: 50px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.83rem;
-  z-index: 999;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  white-space: nowrap;
-}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
+<!-- ─── TOP BAR ─────────────────────────────────────────── -->
 <div class="topbar">
-  <div class="app-title">
-    🍅 <span style="font-style:italic;">Foco</span>
-  </div>
+  <div class="app-title">🍅 <span style="font-style:italic;">Foco</span></div>
   <div class="topbar-right">
     <div class="clock-display" id="clock">00:00:00</div>
-    <button class="sound-btn" id="soundBtn" title="Alternar sonido" onclick="toggleSound()">🔔</button>
+    <button class="icon-btn" id="soundBtn" title="Sonido" onclick="toggleSound()">🔔</button>
   </div>
 </div>
 
@@ -564,69 +460,63 @@ body {
   <!-- ═══════════ LEFT: TIMER ═══════════ -->
   <div class="panel-timer">
 
-    <!-- Mode tabs -->
     <div class="mode-tabs">
       <button class="mode-tab active" data-mode="focus"     onclick="setMode('focus')">Concentración</button>
       <button class="mode-tab"        data-mode="break"     onclick="setMode('break')">Descanso</button>
       <button class="mode-tab"        data-mode="longBreak" onclick="setMode('longBreak')">Descanso largo</button>
     </div>
 
-    <!-- Timer circle -->
     <div class="timer-wrap">
       <svg class="timer-svg" width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
         <circle class="timer-track" cx="115" cy="115" r="85"/>
         <circle class="timer-arc" id="timerArc" cx="115" cy="115" r="85"
-          stroke="#E8A245"
-          stroke-dasharray="534.07"
-          stroke-dashoffset="0"/>
+          stroke="#E8A245" stroke-dasharray="534.07" stroke-dashoffset="0"/>
       </svg>
       <div class="timer-center">
         <div class="timer-digits" id="timerDisplay">25:00</div>
         <div class="timer-mode-label" id="modeLabel">Concentración</div>
-        <div class="timer-running-dot" id="runningDot"></div>
+        <div class="timer-running-dot" id="runningDot" style="background:var(--amber)"></div>
       </div>
     </div>
 
-    <!-- Controls -->
     <div class="controls">
       <button class="btn-icon" onclick="resetTimer()" title="Reiniciar">↺</button>
       <button class="btn-main btn-focus" id="startBtn" onclick="toggleTimer()">Comenzar</button>
       <button class="btn-icon" onclick="skipToNext()" title="Saltar">⏭</button>
     </div>
 
-    <!-- Sessions -->
+    <!-- Sessions + physical indicators -->
     <div class="sessions-wrap">
-      <div class="sessions-label">Sesiones completadas</div>
+      <div class="sessions-label">Ciclo de sesiones (4 = descanso largo)</div>
       <div class="sessions-dots" id="sessionsDots">
-        <div class="sdot" id="sd0"></div>
-        <div class="sdot" id="sd1"></div>
-        <div class="sdot" id="sd2"></div>
-        <div class="sdot" id="sd3"></div>
+        <!-- rendered by JS -->
       </div>
     </div>
 
-    <!-- Settings toggle -->
-    <button class="settings-toggle" onclick="toggleSettings()">
-      ⚙ Ajustar tiempos
-    </button>
+    <button class="settings-toggle" onclick="toggleSettings()">⚙ Ajustar tiempos</button>
 
-    <!-- Settings panel -->
     <div class="settings-panel" id="settingsPanel">
-      <div class="settings-grid">
+      <div class="settings-divider">Pomodoro</div>
+      <div class="settings-grid-4">
         <div class="setting-item">
           <label>Concentración</label>
           <input type="number" id="focusInput" value="25" min="1" max="120">
-          <div style="font-size:0.62rem;color:var(--muted);text-align:center;margin-top:3px;">minutos</div>
+          <div class="unit">min</div>
         </div>
         <div class="setting-item">
           <label>Descanso</label>
           <input type="number" id="breakInput" value="5" min="1" max="60">
-          <div style="font-size:0.62rem;color:var(--muted);text-align:center;margin-top:3px;">minutos</div>
+          <div class="unit">min</div>
         </div>
         <div class="setting-item">
           <label>Desc. largo</label>
           <input type="number" id="longBreakInput" value="15" min="5" max="60">
-          <div style="font-size:0.62rem;color:var(--muted);text-align:center;margin-top:3px;">minutos</div>
+          <div class="unit">min</div>
+        </div>
+        <div class="setting-item">
+          <label>Sesión física</label>
+          <input type="number" id="physInput" value="3" min="1" max="15">
+          <div class="unit">min</div>
         </div>
       </div>
       <button class="settings-apply" onclick="applySettings()">Aplicar cambios ✓</button>
@@ -634,10 +524,9 @@ body {
 
   </div>
 
-  <!-- ═══════════ RIGHT: TASKS + TIPS ═══════════ -->
+  <!-- ═══════════ RIGHT: Tasks + Tips ═══════════ -->
   <div class="panel-right">
 
-    <!-- Tasks -->
     <div class="section-tasks">
       <div class="section-header">
         <span class="section-title">Tareas del día</span>
@@ -646,15 +535,14 @@ body {
       <div class="task-input-row">
         <input class="task-input" id="taskInput"
           placeholder="Escribí una tarea y presioná Enter…"
-          onkeydown="if(event.key==='Enter') addTask()" maxlength="100">
-        <button class="btn-add" onclick="addTask()" title="Agregar">+</button>
+          onkeydown="if(event.key==='Enter') addTask()" maxlength="120">
+        <button class="btn-add" onclick="addTask()">+</button>
       </div>
       <div class="task-list" id="taskList">
         <div class="task-empty">Tu lista está vacía. ¡Agregá tu primera tarea!</div>
       </div>
     </div>
 
-    <!-- Tips -->
     <div class="section-tips">
       <div class="section-header">
         <span class="section-title">Consejos de bienestar</span>
@@ -665,41 +553,108 @@ body {
   </div>
 </main>
 
+<!-- ═══════════ PHYSICAL SESSION OVERLAY ═══════════ -->
+<div class="phys-overlay" id="physOverlay">
+  <div class="phys-topbar">
+    <div class="phys-badge">
+      <div class="phys-badge-dot"></div>
+      Actividad física y cuidados
+    </div>
+    <div class="phys-total-time" id="physTotalTimer">03:00</div>
+  </div>
+
+  <div class="phys-body">
+    <div class="phys-ring-wrap">
+      <svg class="phys-ring-svg" width="200" height="200" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="phys-ring-track" cx="100" cy="100" r="80"/>
+        <circle class="phys-ring-arc" id="physArc" cx="100" cy="100" r="80"
+          stroke-dasharray="502.65" stroke-dashoffset="0"/>
+      </svg>
+      <div class="phys-ring-center">
+        <div class="phys-exercise-icon" id="physIcon">🚶</div>
+        <div class="phys-ring-timer" id="physExTimer">45</div>
+      </div>
+    </div>
+
+    <div class="phys-exercise-name" id="physName">Caminá por el cuarto</div>
+    <div class="phys-exercise-desc" id="physDesc">Hacé un circuito amplio. Mové los brazos con amplitud.</div>
+    <div class="phys-exercise-tip" id="physTip"></div>
+
+    <div class="phys-progress-dots" id="physDots"></div>
+
+    <div class="phys-controls">
+      <button class="phys-btn-next" onclick="nextExercise()">Siguiente ejercicio →</button>
+      <button class="phys-btn-skip" onclick="skipPhysicalSession()">Saltar sesión</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-// ─── Constants ───────────────────────────────────────────────────────────────
-const R  = 85;
-const C  = +(2 * Math.PI * R).toFixed(2); // 534.07
-
-const TIPS = [
-  { icon:'💧', text:'Tomá agua — hidratarse mejora la concentración y el estado de ánimo.',  bg:'rgba(55,138,221,0.1)'  },
-  { icon:'🚶', text:'Pausa activa — caminá 2 minutos entre sesiones para resetear el cuerpo.', bg:'rgba(30,158,117,0.1)'  },
-  { icon:'👁️', text:'Regla 20-20-20: cada 20 min, mirá algo a 6 m de distancia por 20 segundos.', bg:'rgba(127,119,221,0.1)' },
-  { icon:'🧍', text:'Pararme — levantarme unos minutos reduce la fatiga y mejora la circulación.', bg:'rgba(232,162,69,0.1)'  },
-  { icon:'🔄', text:'Ejercitar espalda y hombros — círculos, extensiones y rotaciones de cuello.',  bg:'rgba(208,90,48,0.1)'   },
-  { icon:'🌬️', text:'Respiración 4-7-8: inhalá 4s, retené 7s, exhalá 8s. Relaja el sistema nervioso.', bg:'rgba(78,207,176,0.1)'  },
-  { icon:'😌', text:'Cerrar los ojos 20 segundos — descanso visual para reducir la tensión ocular.', bg:'rgba(155,143,232,0.1)' },
-  { icon:'🙆', text:'Estirar cuello, muñecas y piernas — previene tensión muscular y lesiones.',     bg:'rgba(99,153,34,0.1)'   },
-  { icon:'🌿', text:'Mirá algo verde o natural unos instantes — baja el cortisol y recarga la atención.', bg:'rgba(30,158,117,0.1)' },
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const EXERCISES = [
+  { icon:'🚶', name:'Caminá por el cuarto',     desc:'Hacé varios circuitos. Mové los brazos con amplitud. Levantá las rodillas.',            tip:'Activa la circulación y resetea la mente.' },
+  { icon:'🔄', name:'Rotaciones de cuello',      desc:'Lento y suave: 5 círculos hacia la derecha, 5 hacia la izquierda. Sin forzar.',         tip:'Ideal si tensás el cuello al mirar la pantalla.' },
+  { icon:'💪', name:'Encogimientos de hombros',  desc:'Llevá los hombros hasta las orejas, mantenelos 2 segundos y soltá. Repetí 12 veces.',   tip:'Libera la tensión acumulada en trapecios.' },
+  { icon:'🦵', name:'Sentadillas',               desc:'10 sentadillas lentas y controladas. Rodillas alineadas con los pies. Bajá hasta 90°.',  tip:'Reactiva los músculos que se duermen sentado.' },
+  { icon:'🤸', name:'Estiramiento lateral',      desc:'Un brazo sobre la cabeza, inclinarte al lado opuesto. 20 segundos cada lado, suave.',   tip:'Abre los costados del tronco y la columna.' },
+  { icon:'🧘', name:'Estiramiento de espalda',   desc:'Entrelazá los dedos, extendé los brazos al frente y redondea la espalda. Sostené 20s.', tip:'Contrarresta horas de postura encorvada.' },
+  { icon:'🦶', name:'Puntillas',                 desc:'Subí y bajá en puntas de pie 20 veces. Lento y controlado. Podés apoyarte en la silla.', tip:'Mejora la circulación en pantorrillas y pies.' },
+  { icon:'✋', name:'Estiramiento de muñecas',   desc:'Extendé el brazo, llevá los dedos hacia atrás con la otra mano. 15s cada lado.',         tip:'Previene el síndrome del túnel carpiano.' },
+  { icon:'🌬️', name:'Respiración profunda',     desc:'Inhalá en 4 tiempos, retené 4, exhalá en 6. Repetí 6 veces. Ojos cerrados.',            tip:'Activa el sistema nervioso parasimpático.' },
+  { icon:'🏋️', name:'Flexiones de pie',         desc:'Apoyá las manos en el escritorio o pared. 10 flexiones lentas. Cuerpo recto.',           tip:'Activa pecho, hombros y brazos.' },
+  { icon:'🪑', name:'Estiramiento de cadera',   desc:'De pie, llevá una rodilla al pecho y mantené 20 segundos. Cambiá de lado.',              tip:'Libera el flexor de cadera tenso por sentarse.' },
+  { icon:'👁️', name:'Descanso visual activo',   desc:'Cerrá los ojos 30s. Luego enfocá algo a más de 6 metros durante 20 segundos.',          tip:'Regla 20-20-20: reduce la fatiga ocular significativamente.' },
 ];
 
-// ─── State ───────────────────────────────────────────────────────────────────
-let mode       = 'focus';
-let isRunning  = false;
-let timeLeft   = 25 * 60;
-let totalTime  = 25 * 60;
-let sessions   = 0;
-let interval   = null;
-let soundOn    = true;
-let taskIdSeq  = 0;
-const tasks    = [];
-const cfg      = { focus: 25, break: 5, longBreak: 15 };
+const TIPS = [
+  { icon:'💧', text:'Tomá agua — hidratarse mejora la concentración y el estado de ánimo.',        bg:'rgba(55,138,221,0.1)'   },
+  { icon:'🚶', text:'Pausa activa — caminá 2 minutos entre sesiones para resetear el cuerpo.',     bg:'rgba(30,158,117,0.1)'   },
+  { icon:'👁️', text:'Regla 20-20-20: cada 20 min, mirá algo a 6 m durante 20 segundos.',          bg:'rgba(127,119,221,0.1)'  },
+  { icon:'🧍', text:'Pararme — levantarme unos minutos reduce la fatiga y mejora la circulación.',  bg:'rgba(232,162,69,0.1)'   },
+  { icon:'🔄', text:'Ejercitar espalda y hombros — círculos, extensiones y rotaciones de cuello.',  bg:'rgba(208,90,48,0.1)'    },
+  { icon:'🌬️', text:'Respiración 4-7-8: inhalá 4s, retené 7s, exhalá 8s. Relaja el sistema nervioso.', bg:'rgba(78,207,176,0.1)' },
+  { icon:'😌', text:'Cerrar los ojos 20 segundos — descanso visual para reducir la tensión ocular.', bg:'rgba(155,143,232,0.1)' },
+  { icon:'🙆', text:'Estirar cuello, muñecas y piernas — previene tensión muscular y lesiones.',    bg:'rgba(99,153,34,0.1)'    },
+  { icon:'🌿', text:'Mirá algo verde o natural — baja el cortisol y recarga la atención.',          bg:'rgba(30,158,117,0.1)'   },
+];
 
-// ─── Clock ───────────────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
+const R_MAIN  = 85;  const C_MAIN  = +(2 * Math.PI * R_MAIN).toFixed(2);  // 534.07
+const R_PHYS  = 80;  const C_PHYS  = +(2 * Math.PI * R_PHYS).toFixed(2);  // 502.65
+const EX_DURATION = 45;        // seconds per exercise inside physical session
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let mode          = 'focus';
+let isRunning     = false;
+let timeLeft      = 25 * 60;
+let totalTime     = 25 * 60;
+let sessions      = 0;          // completed focus sessions
+let interval      = null;
+let soundOn       = true;
+
+const cfg = { focus: 25, break: 5, longBreak: 15, physical: 3 };
+
+// Physical session state
+let physActive       = false;
+let pendingBreakMode = 'break';
+let physTimeLeft     = 0;
+let physTotalSecs    = 0;
+let physInterval     = null;
+let physExerciseIdx  = 0;       // index in EXERCISES array (cycles globally)
+let physExTimeLeft   = 0;       // countdown for current exercise
+let physSessionExercises = [];  // list of exercises for this session
+let physCurrentSlot  = 0;       // slot within this session's exercise list
+let physSessionsDone = 0;       // how many physical sessions completed
+
+// Tasks
+let taskIdSeq = 0;
+const tasks   = [];
+
+// ─── Clock ────────────────────────────────────────────────────────────────────
 function updateClock() {
-  const n = new Date();
-  const p = v => String(v).padStart(2,'0');
+  const n = new Date(), p = v => String(v).padStart(2,'0');
   document.getElementById('clock').textContent =
     `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
 }
@@ -707,78 +662,71 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ─── Timer UI ─────────────────────────────────────────────────────────────────
+const COLORS  = { focus:'#E8A245', break:'#4ECFB0', longBreak:'#9B8FE8' };
+const LABELS  = { focus:'Concentración', break:'Descanso', longBreak:'Descanso largo' };
+const BTN_CLS = { focus:'btn-focus', break:'btn-break', longBreak:'btn-longbreak' };
+
 function fmt(s) {
   return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 
-const COLORS = { focus:'#E8A245', break:'#4ECFB0', longBreak:'#9B8FE8' };
-const LABELS = { focus:'Concentración', break:'Descanso', longBreak:'Descanso largo' };
-const BTN_CLS = { focus:'btn-focus', break:'btn-break', longBreak:'btn-longbreak' };
-
 function renderTimerUI() {
-  // digits
   document.getElementById('timerDisplay').textContent = fmt(timeLeft);
   document.getElementById('timerDisplay').style.color = COLORS[mode];
 
-  // arc
   const progress = totalTime > 0 ? timeLeft / totalTime : 0;
-  const offset   = C * (1 - progress);
-  const arc      = document.getElementById('timerArc');
-  arc.style.strokeDashoffset = offset;
+  const arc = document.getElementById('timerArc');
+  arc.style.strokeDashoffset = C_MAIN * (1 - progress);
   arc.style.stroke = COLORS[mode];
 
-  // running dot
   const dot = document.getElementById('runningDot');
   dot.classList.toggle('visible', isRunning);
   dot.style.background = COLORS[mode];
 
-  // mode label
   document.getElementById('modeLabel').textContent = LABELS[mode];
+  document.querySelectorAll('.mode-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.mode === mode));
 
-  // start btn
   const btn = document.getElementById('startBtn');
   btn.className = `btn-main ${BTN_CLS[mode]}`;
   btn.textContent = isRunning ? 'Pausar' : (timeLeft < totalTime ? 'Continuar' : 'Comenzar');
-
-  // mode tabs
-  document.querySelectorAll('.mode-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.mode === mode));
 }
 
-function renderSessions() {
-  const pos = sessions % 4;
+function renderSessionsDots() {
+  // Each cycle = focus → physical → break. Show current cycle (4 focus sessions = long break).
+  const wrap = document.getElementById('sessionsDots');
+  let html = '';
+  const cyclePos = sessions % 4; // 0-3 within the current long-break cycle
   for (let i = 0; i < 4; i++) {
-    document.getElementById(`sd${i}`).className = `sdot${i < pos ? ' done' : ''}`;
+    const done = i < cyclePos;
+    html += `<div class="sdot${done ? ' done' : ''}"></div>`;
   }
+  wrap.innerHTML = html;
 }
 
 // ─── Timer logic ──────────────────────────────────────────────────────────────
-function setMode(m, autoRender = true) {
+function setMode(m, skipRender) {
   clearInterval(interval);
   isRunning = false;
   mode      = m;
   timeLeft  = cfg[m] * 60;
   totalTime = timeLeft;
-  if (autoRender) renderTimerUI();
+  if (!skipRender) { renderTimerUI(); renderSessionsDots(); }
 }
 
 function toggleTimer() {
   if (isRunning) {
-    clearInterval(interval);
-    isRunning = false;
+    clearInterval(interval); isRunning = false;
   } else {
-    isRunning = true;
-    interval  = setInterval(tick, 1000);
+    isRunning = true; interval = setInterval(tick, 1000);
   }
   renderTimerUI();
 }
 
 function tick() {
   if (timeLeft <= 0) {
-    clearInterval(interval);
-    isRunning = false;
-    onTimerEnd();
-    return;
+    clearInterval(interval); isRunning = false;
+    onTimerEnd(); return;
   }
   timeLeft--;
   renderTimerUI();
@@ -789,14 +737,10 @@ function onTimerEnd() {
 
   if (mode === 'focus') {
     sessions++;
-    renderSessions();
-    const nextMode = sessions % 4 === 0 ? 'longBreak' : 'break';
-    setMode(nextMode);
-    const msgs = {
-      break:     '🎉 ¡Sesión completada! Tomá un descanso.',
-      longBreak: '🌿 ¡Cuatro sesiones! Merecés un descanso largo.'
-    };
-    showToast(msgs[nextMode]);
+    renderSessionsDots();
+    // Always: focus → physical → break (short or long every 4)
+    pendingBreakMode = sessions % 4 === 0 ? 'longBreak' : 'break';
+    startPhysicalSession();
   } else {
     setMode('focus');
     showToast('💪 ¡Descanso terminado! A concentrarse de nuevo.');
@@ -805,43 +749,131 @@ function onTimerEnd() {
 }
 
 function resetTimer() {
-  clearInterval(interval);
-  isRunning = false;
-  timeLeft  = cfg[mode] * 60;
-  totalTime = timeLeft;
+  clearInterval(interval); isRunning = false;
+  timeLeft = cfg[mode] * 60; totalTime = timeLeft;
   renderTimerUI();
 }
 
 function skipToNext() {
-  clearInterval(interval);
-  isRunning = false;
-  timeLeft  = 0;
-  onTimerEnd();
+  clearInterval(interval); isRunning = false;
+  timeLeft = 0; onTimerEnd();
+}
+
+// ─── Physical session ─────────────────────────────────────────────────────────
+function buildPhysicalExercises() {
+  // Pick a sequence of exercises for this session, rotating globally
+  const totalSecs = cfg.physical * 60;
+  const count     = Math.max(2, Math.ceil(totalSecs / EX_DURATION));
+  const exercises = [];
+  for (let i = 0; i < count; i++) {
+    exercises.push(EXERCISES[(physExerciseIdx + i) % EXERCISES.length]);
+  }
+  return exercises;
+}
+
+function startPhysicalSession() {
+  physActive         = true;
+  physTotalSecs      = cfg.physical * 60;
+  physTimeLeft       = physTotalSecs;
+  physSessionExercises = buildPhysicalExercises();
+  physCurrentSlot    = 0;
+  physExTimeLeft     = Math.min(EX_DURATION, physTimeLeft);
+
+  renderPhysicalOverlay();
+  document.getElementById('physOverlay').classList.add('active');
+  physInterval = setInterval(tickPhysical, 1000);
+  if (soundOn) playChime();
+}
+
+function tickPhysical() {
+  physTimeLeft--;
+  physExTimeLeft--;
+  if (physExTimeLeft <= 0 && physTimeLeft > 0) nextExercise(true); // auto-advance
+  if (physTimeLeft <= 0) { endPhysicalSession(); return; }
+  renderPhysicalRing();
+  document.getElementById('physTotalTimer').textContent = fmt(physTimeLeft);
+}
+
+function nextExercise(auto) {
+  physCurrentSlot = (physCurrentSlot + 1) % physSessionExercises.length;
+  physExerciseIdx = (physExerciseIdx + 1) % EXERCISES.length; // advance global
+  physExTimeLeft  = Math.min(EX_DURATION, physTimeLeft);
+  renderPhysicalOverlay();
+  if (!auto && soundOn) playChime();
+}
+
+function endPhysicalSession() {
+  clearInterval(physInterval);
+  physActive = false;
+  physSessionsDone++;
+  document.getElementById('physOverlay').classList.remove('active');
+  setMode(pendingBreakMode);
+  renderTimerUI(); renderSessionsDots();
+  showToast(pendingBreakMode === 'longBreak' ? '💚 ¡Sesión física lista! Ahora tu descanso largo 🌿' : '💚 ¡Sesión física lista! Ahora a descansar ☕');
+}
+
+function skipPhysicalSession() {
+  clearInterval(physInterval);
+  physActive = false;
+  document.getElementById('physOverlay').classList.remove('active');
+  setMode(pendingBreakMode);
+  renderTimerUI(); renderSessionsDots();
+  showToast('Sesión física saltada — ¡la próxima no te la perdás!');
+}
+
+function renderPhysicalOverlay() {
+  const ex = physSessionExercises[physCurrentSlot];
+  document.getElementById('physIcon').textContent  = ex.icon;
+  document.getElementById('physName').textContent  = ex.name;
+  document.getElementById('physDesc').textContent  = ex.desc;
+  document.getElementById('physTip').textContent   = ex.tip;
+  document.getElementById('physTotalTimer').textContent = fmt(physTimeLeft);
+  renderPhysicalRing();
+  renderPhysicalDots();
+}
+
+function renderPhysicalRing() {
+  const progress = physExTimeLeft / EX_DURATION;
+  const arc = document.getElementById('physArc');
+  arc.style.strokeDashoffset = C_PHYS * (1 - progress);
+  document.getElementById('physExTimer').textContent = physExTimeLeft + 's';
+}
+
+function renderPhysicalDots() {
+  const dots = document.getElementById('physDots');
+  dots.innerHTML = physSessionExercises.map((_, i) => {
+    const cls = i < physCurrentSlot ? 'done' : i === physCurrentSlot ? 'active' : '';
+    return `<div class="phdot ${cls}"></div>`;
+  }).join('');
 }
 
 // ─── Sound ────────────────────────────────────────────────────────────────────
 function playBeep() {
   try {
-    const ctx  = new (window.AudioContext || window.webkitAudioContext)();
-    const osc  = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 660;
-    osc.type = 'sine';
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 1.0);
-    // second note
-    const osc2 = ctx.createOscillator();
-    const g2   = ctx.createGain();
-    osc2.connect(g2); g2.connect(ctx.destination);
-    osc2.frequency.value = 880; osc2.type = 'sine';
-    g2.gain.setValueAtTime(0.2, ctx.currentTime + 0.15);
-    g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.1);
-    osc2.start(ctx.currentTime + 0.15);
-    osc2.stop(ctx.currentTime + 1.1);
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [[660,0,0.25],[880,0.18,0.2]].forEach(([freq,delay,vol]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = 'sine';
+      g.gain.setValueAtTime(vol, ctx.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.9);
+      o.start(ctx.currentTime + delay); o.stop(ctx.currentTime + delay + 0.9);
+    });
+  } catch(e) {}
+}
+
+function playChime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = 'sine';
+      const t = ctx.currentTime + i * 0.12;
+      g.gain.setValueAtTime(0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+      o.start(t); o.stop(t + 0.7);
+    });
   } catch(e) {}
 }
 
@@ -857,16 +889,15 @@ function toggleSettings() {
 }
 
 function applySettings() {
-  const clamp = (v, mn, mx) => Math.max(mn, Math.min(mx, v));
-  cfg.focus     = clamp(parseInt(document.getElementById('focusInput').value)    || 25, 1, 120);
-  cfg.break     = clamp(parseInt(document.getElementById('breakInput').value)    || 5,  1,  60);
-  cfg.longBreak = clamp(parseInt(document.getElementById('longBreakInput').value)|| 15, 5,  60);
-
-  // Sync inputs back (in case clamped)
+  const clamp = (v,mn,mx) => Math.max(mn, Math.min(mx, isNaN(v) ? mn : v));
+  cfg.focus     = clamp(parseInt(document.getElementById('focusInput').value),    1, 120);
+  cfg.break     = clamp(parseInt(document.getElementById('breakInput').value),    1,  60);
+  cfg.longBreak = clamp(parseInt(document.getElementById('longBreakInput').value),5,  60);
+  cfg.physical  = clamp(parseInt(document.getElementById('physInput').value),     1,  15);
   document.getElementById('focusInput').value    = cfg.focus;
   document.getElementById('breakInput').value    = cfg.break;
   document.getElementById('longBreakInput').value= cfg.longBreak;
-
+  document.getElementById('physInput').value     = cfg.physical;
   setMode(mode);
   document.getElementById('settingsPanel').classList.remove('open');
   showToast('Tiempos actualizados ✓');
@@ -878,43 +909,25 @@ function addTask() {
   const text  = input.value.trim();
   if (!text) return;
   tasks.push({ id: ++taskIdSeq, text, done: false });
-  input.value = '';
-  renderTasks();
-  input.focus();
+  input.value = ''; renderTasks(); input.focus();
 }
-
-function toggleTask(id) {
-  const t = tasks.find(t => t.id === id);
-  if (t) { t.done = !t.done; renderTasks(); }
-}
-
-function deleteTask(id) {
-  const i = tasks.findIndex(t => t.id === id);
-  if (i > -1) { tasks.splice(i, 1); renderTasks(); }
-}
-
-function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function toggleTask(id) { const t = tasks.find(t=>t.id===id); if(t){t.done=!t.done; renderTasks();} }
+function deleteTask(id) { const i=tasks.findIndex(t=>t.id===id); if(i>-1){tasks.splice(i,1); renderTasks();} }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderTasks() {
   const list = document.getElementById('taskList');
-  const done = tasks.filter(t => t.done).length;
+  const done = tasks.filter(t=>t.done).length;
   document.getElementById('taskCounter').textContent = `${done} / ${tasks.length}`;
-
   if (!tasks.length) {
-    list.innerHTML = '<div class="task-empty">Tu lista está vacía. ¡Agregá tu primera tarea!</div>';
-    return;
+    list.innerHTML = '<div class="task-empty">Tu lista está vacía. ¡Agregá tu primera tarea!</div>'; return;
   }
-
-  // Pending first, done at bottom
   const sorted = [...tasks.filter(t=>!t.done), ...tasks.filter(t=>t.done)];
-
   list.innerHTML = sorted.map(t => `
-    <div class="task-item${t.done ? ' done' : ''}">
-      <button class="task-check" onclick="toggleTask(${t.id})" title="${t.done ? 'Desmarcar' : 'Completar'}"></button>
+    <div class="task-item${t.done?' done':''}">
+      <button class="task-check" onclick="toggleTask(${t.id})"></button>
       <span class="task-text">${esc(t.text)}</span>
-      <button class="task-del" onclick="deleteTask(${t.id})" title="Eliminar">✕</button>
+      <button class="task-del" onclick="deleteTask(${t.id})">✕</button>
     </div>
   `).join('');
 }
@@ -933,15 +946,14 @@ function renderTips() {
 let toastTimer = null;
 function showToast(msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.opacity = '1';
+  el.textContent = msg; el.style.opacity = '1';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.style.opacity = '0', 3000);
+  toastTimer = setTimeout(() => el.style.opacity = '0', 3500);
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 renderTimerUI();
-renderSessions();
+renderSessionsDots();
 renderTasks();
 renderTips();
 </script>
