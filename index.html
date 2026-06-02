@@ -7,334 +7,815 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:      #17100D; --surface:  #211812; --surface2: #2C201A;
-  --border:  rgba(255,255,255,0.07);
-  --amber:   #E8A245; --teal: #4ECFB0; --purple: #9B8FE8;
-  --green:   #72C55A; --text: #F0E2D0; --muted:  #7A6A5A; --red: #E05A5A;
-}
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
-/* ── TOP BAR ── */
-.topbar { display:flex; justify-content:space-between; align-items:center; padding:.8rem 1.5rem; border-bottom:1px solid var(--border); position:relative; z-index:1; flex-shrink:0; }
-.app-title { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--text); display:flex; align-items:center; gap:.75rem; }
-.topbar-right { display:flex; align-items:center; gap:.65rem; }
-.clock-display { font-family:'JetBrains Mono',monospace; font-size:.82rem; font-weight:300; color:var(--muted); letter-spacing:.06em; background:var(--surface); padding:.28rem .7rem; border-radius:50px; border:1px solid var(--border); }
-.icon-btn { background:none; border:1px solid var(--border); color:var(--muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:.82rem; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+:root {
+  --bg:       #EDE8DC;
+  --bg2:      #E6E0D2;
+  --surface:  #F4F0E8;
+  --surface2: #EBE5D8;
+  --surface3: #E0D9CB;
+  --wood:     #4A3220;
+  --border:   rgba(80,50,20,0.1);
+  --border2:  rgba(80,50,20,0.2);
+  --amber:    #9A6412;
+  --teal:     #22786A;
+  --purple:   #4A3A90;
+  --green:    #2C7820;
+  --text:     #281A08;
+  --text2:    #46301A;
+  --muted:    #8A7258;
+  --red:      #A02820;
+}
+
+html, body {
+  height:100%;
+}
+body {
+  font-family:'DM Sans',sans-serif;
+  background: radial-gradient(ellipse at 30% 20%, #E8E2D4 0%, var(--bg) 70%);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ═══════════════════════════════
+   TOP BAR
+═══════════════════════════════ */
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:.75rem 2rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  position:relative;
+  z-index:2;
+  background: rgba(237,232,220,0.95);
+}
+.app-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;
+  color:var(--text2);
+  display:flex; align-items:center; gap:.65rem;
+  letter-spacing:.04em;
+}
+.app-title span { font-style:italic; }
+.topbar-right { display:flex; align-items:center; gap:.6rem; }
+.clock-display {
+  font-family:'JetBrains Mono',monospace;
+  font-size:.82rem; font-weight:300;
+  color:var(--muted); letter-spacing:.07em;
+  background:var(--surface); padding:.28rem .75rem;
+  border-radius:50px; border:1px solid var(--border);
+}
+.icon-btn {
+  background:none; border:1px solid var(--border);
+  color:var(--muted); width:32px; height:32px;
+  border-radius:50%; cursor:pointer; font-size:.82rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .25s;
+}
 .icon-btn:hover { border-color:var(--amber); color:var(--amber); }
-.notif-btn { background:none; border:1px solid var(--border); color:var(--muted); padding:.28rem .7rem; border-radius:50px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.72rem; transition:all .2s; white-space:nowrap; }
+.notif-btn {
+  background:none; border:1px solid var(--border);
+  color:var(--muted); padding:.27rem .75rem; border-radius:50px;
+  cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.7rem;
+  transition:all .25s; white-space:nowrap;
+}
 .notif-btn:hover { border-color:var(--amber); color:var(--amber); }
 
-/* ── MAIN ── */
-.main { flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:0; overflow:hidden; }
-@media(max-width:720px){ .main{grid-template-columns:1fr; overflow:auto;} .panel-timer{border-right:none;border-bottom:1px solid var(--border);} }
+/* ═══════════════════════════════
+   TOKONOMA DECORATIVE BAND
+═══════════════════════════════ */
+.tokonoma-zone {
+  flex-shrink:0;
+  height:96px;
+  position:relative;
+  overflow:hidden;
+  background: linear-gradient(180deg, #C8BC9E 0%, #C4B898 100%);
+  border-bottom:3px solid var(--wood);
+  border-top:2px solid var(--wood);
+}
+/* Wood grain texture overlay */
+.tokonoma-zone::before {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    92deg,
+    transparent 0px,
+    transparent 60px,
+    rgba(0,0,0,0.04) 60px,
+    rgba(0,0,0,0.04) 61px
+  );
+  pointer-events:none;
+}
+/* Left pillar (tokobashira) */
+.tokonoma-zone::after {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0;
+  width:10px;
+  background: linear-gradient(90deg, #3A2410, #5A3818, #3A2410);
+  border-right:1px solid rgba(100,60,20,0.25);
+  pointer-events:none;
+}
 
-/* ── LEFT PANEL ── */
-.panel-timer { padding:1.75rem 1.25rem; border-right:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:1.2rem; overflow-y:auto; }
+.tokonoma-inner {
+  position:absolute; inset:0 0 0 10px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 2.5rem;
+}
 
-.mode-tabs { display:flex; gap:4px; background:var(--surface); padding:4px; border-radius:50px; }
-.mode-tab { padding:.35rem .85rem; border-radius:50px; border:none; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.72rem; font-weight:500; cursor:pointer; transition:all .25s; white-space:nowrap; }
+/* Bamboo left */
+.bamboo-wrap { width:100px; height:96px; flex-shrink:0; }
+
+/* Kakejiku (scroll) center */
+.kakejiku-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  flex:1; max-width:380px;
+}
+.kakejiku-roller {
+  width:220px; height:7px;
+  background: linear-gradient(90deg, #2A1A0A, #4A3020, #5A3A22, #4A3020, #2A1A0A);
+  border-radius:4px;
+  box-shadow:0 2px 4px rgba(0,0,0,.5);
+}
+.kakejiku-body {
+  width:220px; min-height:58px;
+  background: rgba(255,252,240,0.55);
+  border-left:1px solid rgba(100,60,20,0.15);
+  border-right:1px solid rgba(100,60,20,0.15);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px; padding:4px 0;
+}
+.kakejiku-kanji {
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem; letter-spacing:.3em;
+  color:rgba(50,28,8,0.55);
+  line-height:1;
+}
+.kakejiku-quote {
+  font-size:.6rem; color:rgba(50,28,8,0.32);
+  letter-spacing:.08em; text-align:center;
+  font-style:italic; line-height:1.5;
+}
+
+/* Cat right */
+.cat-wrap {
+  flex-shrink:0; width:80px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.cat-label {
+  font-size:.52rem; color:var(--muted); letter-spacing:.08em;
+}
+@keyframes wave {
+  0%,100%{ transform:rotate(0deg) }
+  30%{ transform:rotate(-20deg) }
+  60%{ transform:rotate(-8deg) }
+}
+.cat-paw { transform-origin:45px 62px; animation:wave 2.6s ease-in-out infinite; }
+
+/* ═══════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════ */
+.main {
+  flex:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:0;
+  overflow:hidden;
+}
+@media(max-width:720px){
+  .main{ grid-template-columns:1fr; overflow:auto; }
+  .panel-timer{ border-right:none; border-bottom:1px solid var(--border); }
+}
+
+/* ═══════════════════════════════
+   LEFT PANEL — TIMER
+═══════════════════════════════ */
+.panel-timer {
+  padding:1.6rem 1.5rem 1.5rem;
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column; align-items:center;
+  gap:1.15rem; overflow-y:auto;
+  position:relative;
+}
+
+/* Enso background behind timer */
+.enso-bg {
+  position:absolute; top:16px; left:50%; transform:translateX(-50%);
+  pointer-events:none; z-index:0; opacity:1;
+}
+
+/* Mode tabs */
+.mode-tabs {
+  display:flex; gap:3px;
+  background:var(--surface); padding:3px; border-radius:50px;
+  border:1px solid var(--border); position:relative; z-index:1;
+}
+.mode-tab {
+  padding:.32rem .85rem; border-radius:50px; border:none;
+  background:transparent; color:var(--muted);
+  font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:500;
+  cursor:pointer; transition:all .3s; white-space:nowrap; letter-spacing:.02em;
+}
 .mode-tab.active[data-mode="focus"]     { background:var(--amber);  color:#17100D; }
 .mode-tab.active[data-mode="break"]     { background:var(--teal);   color:#17100D; }
 .mode-tab.active[data-mode="longBreak"] { background:var(--purple); color:#17100D; }
 
-.timer-wrap { position:relative; width:210px; height:210px; }
+/* Timer ring */
+.timer-wrap { position:relative; width:210px; height:210px; z-index:1; }
 .timer-svg { transform:rotate(-90deg); display:block; }
-.timer-track { fill:none; stroke:var(--surface2); stroke-width:7; }
-.timer-arc { fill:none; stroke-width:7; stroke-linecap:round; stroke-dasharray:502.65; stroke-dashoffset:0; transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1), stroke .4s; }
-.timer-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; }
-.timer-digits { font-family:'JetBrains Mono',monospace; font-size:3rem; font-weight:700; letter-spacing:-.02em; line-height:1; transition:color .4s; }
-.timer-mode-label { font-size:.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:.15em; }
-.timer-running-dot { width:6px; height:6px; border-radius:50%; opacity:0; transition:opacity .3s; animation:blink 1.2s step-end infinite; }
+.timer-track { fill:none; stroke:var(--surface3); stroke-width:6; }
+.timer-arc {
+  fill:none; stroke-width:6; stroke-linecap:round;
+  stroke-dasharray:502.65; stroke-dashoffset:0;
+  transition:stroke-dashoffset .65s cubic-bezier(.4,0,.2,1), stroke .45s;
+}
+.timer-center {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+}
+.timer-digits {
+  font-family:'JetBrains Mono',monospace;
+  font-size:3rem; font-weight:700;
+  letter-spacing:-.02em; line-height:1;
+  transition:color .45s;
+}
+.timer-mode-label {
+  font-size:.6rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.18em;
+}
+.timer-running-dot {
+  width:5px; height:5px; border-radius:50%;
+  opacity:0; transition:opacity .3s;
+  animation:blink 1.3s step-end infinite;
+}
 .timer-running-dot.visible { opacity:1; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-.controls { display:flex; gap:.6rem; align-items:center; }
-.btn-icon { width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:50%; cursor:pointer; font-size:.95rem; transition:all .2s; }
-.btn-icon:hover { background:var(--surface2); color:var(--text); }
-.btn-main { padding:.6rem 2rem; border:none; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; cursor:pointer; transition:all .2s; }
+/* Controls */
+.controls { display:flex; gap:.6rem; align-items:center; z-index:1; }
+.btn-icon {
+  width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--muted); border-radius:50%; cursor:pointer; font-size:.92rem;
+  transition:all .22s;
+}
+.btn-icon:hover { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+.btn-main {
+  padding:.6rem 2rem; border:none; border-radius:50px;
+  font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500;
+  cursor:pointer; transition:all .22s; letter-spacing:.03em;
+}
 .btn-main:active { transform:scale(.97); }
 .btn-focus    { background:var(--amber);  color:#17100D; }
 .btn-break    { background:var(--teal);   color:#17100D; }
-.btn-longbreak{ background:var(--purple); color:#17100D; }
+.btn-longbreak{ background:var(--purple); color:#fff;    }
 
-.sessions-wrap { display:flex; flex-direction:column; align-items:center; gap:7px; }
-.sessions-label { font-size:.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+/* Sessions dots */
+.sessions-wrap { display:flex; flex-direction:column; align-items:center; gap:7px; z-index:1; }
+.sessions-label { font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
 .sessions-dots { display:flex; gap:7px; }
-.sdot { width:8px; height:8px; border-radius:50%; background:var(--surface2); border:1px solid var(--border); transition:all .35s; }
-.sdot.done { background:var(--amber); border-color:var(--amber); box-shadow:0 0 6px rgba(232,162,69,.4); }
+.sdot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border);
+  transition:all .4s;
+}
+.sdot.done { background:var(--amber); border-color:var(--amber); }
 
-.settings-toggle { background:none; border:1px solid var(--border); color:var(--muted); padding:.35rem .9rem; border-radius:50px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.72rem; transition:all .2s; display:flex; align-items:center; gap:5px; }
-.settings-toggle:hover { border-color:rgba(255,255,255,.2); color:var(--text); }
-.settings-panel { width:100%; background:var(--surface); border-radius:14px; padding:1.1rem; display:none; border:1px solid var(--border); }
+/* Aikido phrase below dots */
+.ki-phrase {
+  font-size:.58rem; color:rgba(80,50,20,0.28);
+  letter-spacing:.18em; font-style:italic;
+  text-align:center;
+}
+
+/* Settings */
+.settings-toggle {
+  background:none; border:1px solid var(--border);
+  color:var(--muted); padding:.33rem .9rem; border-radius:50px;
+  cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.7rem;
+  transition:all .22s; display:flex; align-items:center; gap:5px;
+  z-index:1;
+}
+.settings-toggle:hover { border-color:var(--border2); color:var(--text2); }
+
+.settings-panel {
+  width:100%; background:var(--surface); border-radius:14px;
+  padding:1.1rem; display:none; border:1px solid var(--border);
+  z-index:1; position:relative;
+}
 .settings-panel.open { display:block; animation:fadeIn .2s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
-.settings-grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:.65rem; margin-bottom:.75rem; }
-.settings-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; margin-bottom:.75rem; }
-.setting-item label { display:block; font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px; }
-.setting-item input[type="number"] { width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:.45rem .4rem; border-radius:7px; font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:700; text-align:center; outline:none; transition:border-color .2s; -moz-appearance:textfield; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
+
+.settings-grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:.6rem; margin-bottom:.7rem; }
+.setting-item label {
+  display:block; font-size:.58rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px;
+}
+.setting-item input[type="number"] {
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  color:var(--text); padding:.42rem .35rem; border-radius:8px;
+  font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:700;
+  text-align:center; outline:none; transition:border-color .22s;
+  -moz-appearance:textfield;
+}
 .setting-item input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
-.setting-item input[type="number"]:focus { border-color:var(--amber); }
-.setting-item .unit { font-size:.58rem; color:var(--muted); text-align:center; margin-top:2px; }
-.settings-divider { font-size:.58rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin:.5rem 0 .4rem; display:flex; align-items:center; gap:7px; }
+.setting-item input[type="number"]:focus { border-color:rgba(223,160,80,.5); }
+.setting-item .unit { font-size:.57rem; color:var(--muted); text-align:center; margin-top:2px; }
+.settings-divider {
+  font-size:.57rem; color:var(--muted); text-transform:uppercase;
+  letter-spacing:.1em; margin:.45rem 0 .4rem;
+  display:flex; align-items:center; gap:7px;
+}
 .settings-divider::before,.settings-divider::after { content:''; flex:1; height:1px; background:var(--border); }
-.settings-apply { width:100%; padding:.5rem; background:rgba(232,162,69,.1); border:1px solid rgba(232,162,69,.28); color:var(--amber); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.8rem; cursor:pointer; transition:all .2s; }
-.settings-apply:hover { background:rgba(232,162,69,.18); }
+.settings-apply {
+  width:100%; padding:.48rem;
+  background:rgba(223,160,80,.08); border:1px solid rgba(223,160,80,.22);
+  color:var(--amber); border-radius:8px; font-family:'DM Sans',sans-serif;
+  font-size:.78rem; cursor:pointer; transition:all .22s;
+}
+.settings-apply:hover { background:rgba(223,160,80,.16); }
 
-/* ── CAT ── */
-.cat-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:.25rem; }
-.cat-label { font-size:.58rem; color:var(--muted); letter-spacing:.08em; }
-@keyframes wave { 0%,100%{transform:rotate(0deg)} 30%{transform:rotate(-18deg)} 60%{transform:rotate(-8deg)} }
-.cat-paw { transform-origin:bottom center; animation:wave 2.4s ease-in-out infinite; }
+/* ═══════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════ */
+.panel-right {
+  display:flex; flex-direction:column; overflow-y:auto;
+  background: linear-gradient(180deg, rgba(237,232,218,.5) 0%, transparent 100%);
+}
 
-/* ── RIGHT PANEL ── */
-.panel-right { display:flex; flex-direction:column; overflow-y:auto; }
+/* Generic section */
+.section {
+  padding:1.3rem 1.75rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.section-header {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:.9rem;
+}
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:.92rem; font-style:italic; color:var(--text2);
+}
+.meta-badge {
+  font-size:.67rem; color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
 
-/* Tasks */
-.section { padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); flex-shrink:0; }
-.section-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.85rem; }
-.section-title { font-family:'Playfair Display',serif; font-size:.9rem; font-style:italic; color:var(--muted); }
-.task-counter { font-size:.7rem; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-.task-input-row { display:flex; gap:7px; margin-bottom:.65rem; }
-.text-input { flex:1; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:.45rem .75rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.83rem; outline:none; transition:border-color .2s; }
+/* Input rows */
+.input-row { display:flex; gap:7px; margin-bottom:.6rem; }
+.text-input {
+  flex:1; background:var(--surface); border:1px solid var(--border);
+  color:var(--text); padding:.45rem .75rem; border-radius:9px;
+  font-family:'DM Sans',sans-serif; font-size:.82rem; outline:none;
+  transition:border-color .22s; line-height:1.4;
+}
 .text-input::placeholder { color:var(--muted); }
-.text-input:focus { border-color:rgba(232,162,69,.4); }
-.time-input { width:85px; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:.45rem .5rem; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:.8rem; outline:none; transition:border-color .2s; text-align:center; flex-shrink:0; }
-.time-input:focus { border-color:rgba(232,162,69,.4); }
-.btn-add { width:34px; height:34px; background:var(--amber); color:#17100D; border:none; border-radius:8px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; }
-.btn-add:hover { opacity:.85; }
-.scroll-list { display:flex; flex-direction:column; gap:5px; max-height:150px; overflow-y:auto; padding-right:2px; }
-.empty-msg { text-align:center; color:var(--muted); font-size:.78rem; padding:1rem 0; font-style:italic; }
+.text-input:focus { border-color:rgba(223,160,80,.35); }
+.time-input {
+  width:82px; background:var(--surface); border:1px solid var(--border);
+  color:var(--text); padding:.45rem .4rem; border-radius:9px;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem;
+  outline:none; transition:border-color .22s; text-align:center; flex-shrink:0;
+}
+.time-input:focus { border-color:rgba(223,160,80,.35); }
 
-/* Task item */
-.task-item { display:flex; align-items:center; gap:8px; padding:.5rem .65rem; background:var(--surface); border-radius:8px; border:1px solid var(--border); transition:all .2s; animation:slideIn .18s ease; }
+.btn-add {
+  width:34px; height:34px; background:var(--amber); color:#17100D;
+  border:none; border-radius:9px; cursor:pointer; font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:all .2s;
+}
+.btn-add:hover { opacity:.88; }
+.btn-add:active { transform:scale(.92); }
+
+/* Scroll list */
+.scroll-list {
+  display:flex; flex-direction:column; gap:5px;
+  max-height:145px; overflow-y:auto; padding-right:2px;
+}
+.empty-msg { text-align:center; color:var(--muted); font-size:.77rem; padding:.95rem 0; font-style:italic; }
+
+/* Task items */
+.task-item {
+  display:flex; align-items:center; gap:8px;
+  padding:.5rem .68rem; background:var(--surface); border-radius:10px;
+  border:1px solid var(--border); transition:all .22s;
+  animation:slideIn .18s ease;
+}
 @keyframes slideIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
-.task-item.done { opacity:.4; }
-.task-check { width:17px; height:17px; border-radius:50%; border:1.5px solid var(--border); background:transparent; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.task-item:hover { border-color:var(--border2); }
+.task-item.done { opacity:.38; }
+.task-check {
+  width:17px; height:17px; border-radius:50%;
+  border:1.5px solid var(--border); background:transparent;
+  cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  transition:all .22s;
+}
 .task-check:hover { border-color:var(--amber); }
 .task-item.done .task-check { background:var(--amber); border-color:var(--amber); }
 .task-item.done .task-check::after { content:'✓'; color:#17100D; font-size:9px; font-weight:700; }
-.task-text { flex:1; font-size:.83rem; color:var(--text); word-break:break-word; line-height:1.3; }
+.task-text { flex:1; font-size:.82rem; color:var(--text2); word-break:break-word; line-height:1.4; }
 .task-item.done .task-text { text-decoration:line-through; color:var(--muted); }
-.del-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.72rem; padding:2px 3px; border-radius:4px; opacity:0; transition:all .2s; flex-shrink:0; }
+.del-btn {
+  background:none; border:none; color:var(--muted); cursor:pointer;
+  font-size:.7rem; padding:2px 3px; border-radius:4px; opacity:0; transition:all .2s; flex-shrink:0;
+}
 .task-item:hover .del-btn { opacity:1; }
 .del-btn:hover { color:var(--red); }
 
-/* Meeting item */
-.meeting-item { display:flex; align-items:center; gap:8px; padding:.5rem .65rem; background:var(--surface); border-radius:8px; border:1px solid var(--border); transition:all .2s; }
-.meeting-item.active-meeting { border-color:rgba(232,162,69,.45); background:rgba(232,162,69,.06); animation:pulse-border 2s ease-in-out infinite; }
-.meeting-item.done-meeting { opacity:.38; }
-@keyframes pulse-border { 0%,100%{border-color:rgba(232,162,69,.45)} 50%{border-color:rgba(232,162,69,.9)} }
-.meeting-time { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--muted); flex-shrink:0; }
-.meeting-name { flex:1; font-size:.82rem; color:var(--text); }
-.meeting-item.active-meeting .meeting-time { color:var(--amber); }
+/* Meeting items */
+.meeting-item {
+  display:flex; align-items:center; gap:8px; padding:.5rem .68rem;
+  background:var(--surface); border-radius:10px; border:1px solid var(--border);
+  transition:all .22s; flex-wrap:wrap;
+}
+.meeting-item:hover { border-color:var(--border2); }
+.meeting-item.active-meeting {
+  border-color:rgba(223,160,80,.4);
+  background:rgba(223,160,80,.05);
+  animation:pulse-gold 2.2s ease-in-out infinite;
+}
+.meeting-item.done-meeting { opacity:.3; }
+@keyframes pulse-gold { 0%,100%{border-color:rgba(223,160,80,.35)} 50%{border-color:rgba(223,160,80,.8)} }
+.meeting-time {
+  font-family:'JetBrains Mono',monospace; font-size:.7rem;
+  color:var(--muted); flex-shrink:0;
+}
+.meeting-name { flex:1; font-size:.81rem; color:var(--text2); min-width:0; }
+.meeting-item.active-meeting .meeting-time,
 .meeting-item.active-meeting .meeting-name { color:var(--amber); }
-.meeting-end-btn { background:rgba(114,197,90,.12); border:1px solid rgba(114,197,90,.3); color:var(--green); padding:.25rem .6rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.7rem; cursor:pointer; white-space:nowrap; transition:all .2s; flex-shrink:0; }
-.meeting-end-btn:hover { background:rgba(114,197,90,.22); }
+.meeting-btns { display:flex; gap:4px; flex-shrink:0; }
+.meeting-end-btn {
+  padding:.22rem .55rem; border-radius:50px; font-family:'DM Sans',sans-serif;
+  font-size:.67rem; cursor:pointer; white-space:nowrap; transition:all .22s; border:1px solid;
+}
+.meeting-end-btn.green-btn { background:rgba(109,189,80,.1); border-color:rgba(109,189,80,.3); color:var(--green); }
+.meeting-end-btn.green-btn:hover { background:rgba(109,189,80,.2); }
+.meeting-end-btn.amber-btn { background:rgba(223,160,80,.1); border-color:rgba(223,160,80,.3); color:var(--amber); }
+.meeting-end-btn.amber-btn:hover { background:rgba(223,160,80,.2); }
 
 /* Tips */
-.section-tips { padding:1.1rem 1.6rem; flex:1; }
+.section-tips { padding:1.1rem 1.75rem; flex:1; }
 .tips-grid { display:flex; flex-direction:column; gap:6px; margin-top:.8rem; }
-.tip-item { display:flex; align-items:center; gap:11px; padding:.55rem .75rem; background:var(--surface); border-radius:9px; border:1px solid var(--border); transition:all .2s; }
-.tip-item:hover { background:var(--surface2); }
-.tip-icon-wrap { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:.95rem; flex-shrink:0; }
-.tip-text { font-size:.76rem; color:var(--muted); line-height:1.4; }
+.tip-item {
+  display:flex; align-items:flex-start; gap:11px; padding:.6rem .8rem;
+  background:var(--surface); border-radius:10px; border:1px solid var(--border);
+  transition:all .22s;
+}
+.tip-item:hover { background:var(--surface2); border-color:var(--border2); }
+.tip-icon-wrap { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:.9rem; flex-shrink:0; margin-top:1px; }
+.tip-kanji { font-family:'Playfair Display',serif; font-size:1rem; }
+.tip-text { font-size:.76rem; color:var(--muted); line-height:1.55; }
+.tip-tag { display:inline-block; font-size:.6rem; color:rgba(223,160,80,.4); letter-spacing:.06em; margin-bottom:2px; }
 
-/* ═══ PHYSICAL OVERLAY ═══ */
-.phys-overlay { position:fixed; inset:0; z-index:200; background:#0E1A14; display:none; flex-direction:column; align-items:center; justify-content:center; }
-.phys-overlay.active { display:flex; animation:overlayIn .35s cubic-bezier(.4,0,.2,1); }
+/* ═══════════════════════════════
+   PHYSICAL SESSION OVERLAY
+═══════════════════════════════ */
+.phys-overlay {
+  position:fixed; inset:0; z-index:200;
+  background: radial-gradient(ellipse at center, #0E2016 0%, #080E0A 100%);
+  display:none; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.phys-overlay.active { display:flex; animation:overlayIn .4s cubic-bezier(.4,0,.2,1); }
 @keyframes overlayIn { from{opacity:0;transform:scale(.97)} to{opacity:1;transform:none} }
-.phys-topbar { position:absolute; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:1.1rem 2rem; border-bottom:1px solid rgba(114,197,90,.12); }
-.phys-badge { display:flex; align-items:center; gap:7px; font-size:.72rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--green); }
-.phys-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1s step-end infinite; }
-.phys-total-time { font-family:'JetBrains Mono',monospace; font-size:.88rem; color:rgba(114,197,90,.5); letter-spacing:.06em; }
-.phys-body { display:flex; flex-direction:column; align-items:center; gap:1.3rem; text-align:center; padding:.75rem 2rem; max-width:460px; width:100%; }
-.phys-ring-wrap { position:relative; width:185px; height:185px; }
-.phys-ring-svg { transform:rotate(-90deg); display:block; }
-.phys-ring-track { fill:none; stroke:rgba(114,197,90,.1); stroke-width:5; }
-.phys-ring-arc { fill:none; stroke:var(--green); stroke-width:5; stroke-linecap:round; stroke-dasharray:471.24; stroke-dashoffset:0; transition:stroke-dashoffset .8s linear; }
-.phys-ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
-.phys-ex-icon { font-size:2.8rem; line-height:1; }
-.phys-ring-timer { font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:300; color:rgba(114,197,90,.6); letter-spacing:.04em; }
-.phys-ex-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:600; color:#D0EDD8; line-height:1.2; }
-.phys-ex-desc { font-size:.87rem; color:rgba(208,237,216,.52); line-height:1.6; max-width:330px; }
-.phys-ex-tip  { font-size:.72rem; color:rgba(114,197,90,.4); font-style:italic; }
-.phys-dots { display:flex; gap:5px; align-items:center; }
-.phdot { width:6px; height:6px; border-radius:50%; background:rgba(114,197,90,.15); transition:all .3s; }
-.phdot.active { background:var(--green); width:16px; border-radius:3px; }
-.phdot.done   { background:rgba(114,197,90,.4); }
-.phys-controls { display:flex; gap:.7rem; align-items:center; }
-.phys-btn-next { padding:.55rem 1.5rem; border:1px solid rgba(114,197,90,.35); background:rgba(114,197,90,.1); color:var(--green); border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.83rem; cursor:pointer; transition:all .2s; }
-.phys-btn-next:hover { background:rgba(114,197,90,.18); }
-.phys-btn-skip { padding:.55rem 1.1rem; border:1px solid var(--border); background:none; color:var(--muted); border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.8rem; cursor:pointer; transition:all .2s; }
-.phys-btn-skip:hover { color:var(--text); }
 
-/* Toast */
-#toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:.55rem 1.3rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.81rem; z-index:999; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
+.phys-topbar {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.1rem 2rem; border-bottom:1px solid rgba(109,189,80,.1);
+}
+.phys-badge {
+  display:flex; align-items:center; gap:7px;
+  font-size:.7rem; font-weight:500; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--green);
+}
+.phys-badge-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--green); animation:blink 1s step-end infinite;
+}
+.phys-total-time {
+  font-family:'JetBrains Mono',monospace;
+  font-size:.88rem; color:rgba(109,189,80,.45); letter-spacing:.06em;
+}
+.phys-aikido-quote {
+  position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:.72rem; color:rgba(109,189,80,.2); letter-spacing:.08em;
+  white-space:nowrap;
+}
+
+.phys-body {
+  display:flex; flex-direction:column; align-items:center;
+  gap:1.2rem; text-align:center; padding:1rem 2rem;
+  max-width:460px; width:100%;
+}
+
+/* Exercise ring */
+.phys-ring-wrap { position:relative; width:180px; height:180px; }
+.phys-ring-svg { transform:rotate(-90deg); display:block; }
+.phys-ring-track { fill:none; stroke:rgba(44,120,32,0.15); stroke-width:5; }
+.phys-ring-arc {
+  fill:none; stroke:var(--green); stroke-width:5; stroke-linecap:round;
+  stroke-dasharray:471.24; stroke-dashoffset:0;
+  transition:stroke-dashoffset .8s linear;
+}
+.phys-ring-center {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px;
+}
+.phys-ex-icon { font-size:2.6rem; line-height:1; }
+.phys-ring-timer {
+  font-family:'JetBrains Mono',monospace; font-size:1.05rem;
+  font-weight:300; color:rgba(109,189,80,.55); letter-spacing:.04em;
+}
+
+.phys-ex-name {
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem; font-weight:600; color:#C8E8C0; line-height:1.25;
+}
+.phys-ex-kanji {
+  font-size:.75rem; color:rgba(109,189,80,.35); letter-spacing:.15em; font-style:italic;
+}
+.phys-ex-desc {
+  font-size:.85rem; color:rgba(190,230,180,.45);
+  line-height:1.65; max-width:330px;
+}
+.phys-ex-tip { font-size:.7rem; color:rgba(109,189,80,.32); font-style:italic; }
+
+.phys-dots { display:flex; gap:5px; align-items:center; }
+.phdot { width:6px; height:6px; border-radius:50%; background:rgba(109,189,80,.12); transition:all .3s; }
+.phdot.active { background:var(--green); width:16px; border-radius:3px; }
+.phdot.done   { background:rgba(109,189,80,.38); }
+
+.phys-controls { display:flex; gap:.7rem; align-items:center; }
+.phys-btn-next {
+  padding:.52rem 1.5rem; border:1px solid rgba(109,189,80,.3);
+  background:rgba(109,189,80,.09); color:var(--green); border-radius:50px;
+  font-family:'DM Sans',sans-serif; font-size:.82rem; cursor:pointer; transition:all .22s;
+}
+.phys-btn-next:hover { background:rgba(109,189,80,.18); }
+.phys-btn-skip {
+  padding:.52rem 1.1rem; border:1px solid var(--border);
+  background:none; color:var(--muted); border-radius:50px;
+  font-family:'DM Sans',sans-serif; font-size:.78rem; cursor:pointer; transition:all .22s;
+}
+.phys-btn-skip:hover { color:var(--text2); }
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+#toast {
+  position:fixed; bottom:1.5rem; left:50%;
+  transform:translateX(-50%);
+  background:var(--surface2); border:1px solid var(--border2);
+  color:var(--text2); padding:.55rem 1.3rem; border-radius:50px;
+  font-family:'DM Sans',sans-serif; font-size:.8rem;
+  z-index:999; opacity:0; transition:opacity .3s;
+  pointer-events:none; white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width:3px; }
 ::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:2px; }
+::-webkit-scrollbar-thumb { background:var(--surface3); border-radius:2px; }
 </style>
 </head>
 <body>
 
-<!-- ─── TOP BAR ─── -->
+<!-- ─── TOPBAR ─── -->
 <div class="topbar">
   <div class="app-title">
-    <!-- Lucky Cat SVG -->
-    <svg viewBox="0 0 62 78" width="38" height="48" style="overflow:visible" aria-label="Gato de la suerte">
-      <!-- body -->
-      <ellipse cx="31" cy="62" rx="19" ry="15" fill="#FFFAF5"/>
-      <!-- belly -->
-      <ellipse cx="31" cy="65" rx="10" ry="9" fill="#FFF" opacity=".5"/>
-      <!-- head -->
-      <circle cx="31" cy="30" r="20" fill="#FFFAF5"/>
-      <!-- left ear -->
-      <polygon points="11,17 15,4 23,17" fill="#FFFAF5"/>
-      <polygon points="13,17 16,7 22,17" fill="#FFB7C5"/>
-      <!-- right ear -->
-      <polygon points="39,17 47,4 51,17" fill="#FFFAF5"/>
-      <polygon points="40,17 46,7 49,17" fill="#FFB7C5"/>
-      <!-- tabby markings -->
-      <ellipse cx="21" cy="24" rx="5" ry="4" fill="#F4C090" opacity=".35"/>
-      <ellipse cx="41" cy="24" rx="5" ry="4" fill="#F4C090" opacity=".35"/>
-      <!-- eyes -->
-      <ellipse cx="24" cy="29" rx="4" ry="4.5" fill="#1A1A2E"/>
-      <ellipse cx="38" cy="29" rx="4" ry="4.5" fill="#1A1A2E"/>
-      <circle cx="25.5" cy="27.2" r="1.6" fill="white"/>
-      <circle cx="39.5" cy="27.2" r="1.6" fill="white"/>
-      <!-- nose -->
-      <ellipse cx="31" cy="35.5" rx="2.2" ry="1.4" fill="#FF9BAA"/>
-      <!-- mouth -->
-      <path d="M28.5 37.2 Q31 40.5 33.5 37.2" stroke="#C9A090" stroke-width=".9" fill="none"/>
-      <!-- whiskers -->
-      <line x1="10" y1="35" x2="27" y2="35.5" stroke="#C9A090" stroke-width=".7"/>
-      <line x1="10" y1="38.5" x2="27" y2="37.8" stroke="#C9A090" stroke-width=".7"/>
-      <line x1="35" y1="35.5" x2="52" y2="35" stroke="#C9A090" stroke-width=".7"/>
-      <line x1="35" y1="37.8" x2="52" y2="38.5" stroke="#C9A090" stroke-width=".7"/>
-      <!-- collar -->
-      <path d="M12 46 Q31 53 50 46" stroke="#E05A5A" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-      <!-- bell -->
-      <ellipse cx="31" cy="50" rx="4" ry="3.2" fill="#E8A245"/>
-      <ellipse cx="31" cy="52" rx="1.2" ry=".9" fill="#B87A10"/>
-      <!-- RAISED RIGHT PAW (animated) -->
-      <g class="cat-paw">
-        <path d="M49 40 Q61 26 57 16 Q54 8 48 13 Q46 17 48 27 Q50 36 49 40" fill="#FFFAF5"/>
-        <ellipse cx="55" cy="13" rx="3" ry="2.5" fill="#FFFAF5"/>
-        <ellipse cx="51" cy="10" rx="2.5" ry="2" fill="#FFFAF5"/>
-        <ellipse cx="58" cy="11" rx="2.5" ry="2" fill="#FFFAF5"/>
-      </g>
-      <!-- left arm down -->
-      <path d="M13 52 Q4 59 6 68" stroke="#FFFAF5" stroke-width="7.5" fill="none" stroke-linecap="round"/>
-      <!-- gold coin -->
-      <circle cx="20" cy="74" r="6" fill="#E8A245" opacity=".92"/>
-      <text x="20" y="77.5" text-anchor="middle" font-size="6.5" fill="#8A5500" font-family="serif" font-weight="bold">大</text>
+    <svg viewBox="0 0 14 14" width="12" height="12">
+      <circle cx="7" cy="7" r="6" fill="none" stroke="rgba(80,50,20,0.2)" stroke-width="1.2"/>
+      <circle cx="7" cy="7" r="3" fill="none" stroke="rgba(80,50,20,0.12)" stroke-width="1"/>
     </svg>
-    <span style="font-style:italic">Foco</span>
+    <span>Foco</span>
+    <span style="font-size:.55rem;color:var(--muted);letter-spacing:.15em;font-style:normal;margin-left:2px;">合氣道</span>
   </div>
   <div class="topbar-right">
     <div class="clock-display" id="clock">00:00:00</div>
-    <button class="notif-btn" id="notifBtn" onclick="requestNotifs()" title="Activar notificaciones">🔔 Notificar</button>
+    <button class="notif-btn" id="notifBtn" onclick="requestNotifs()">🔔 Notificar</button>
     <button class="icon-btn" id="soundBtn" title="Sonido" onclick="toggleSound()">🔊</button>
   </div>
 </div>
 
+<!-- ─── TOKONOMA ─── -->
+<div class="tokonoma-zone">
+  <div class="tokonoma-inner">
+
+    <!-- Bamboo left -->
+    <div class="bamboo-wrap">
+      <svg viewBox="0 0 100 96" width="100" height="96" aria-hidden="true">
+        <!-- Stems -->
+        <line x1="30" y1="96" x2="26" y2="8"  stroke="#2C3A20" stroke-width="5" stroke-linecap="round"/>
+        <line x1="50" y1="96" x2="54" y2="18" stroke="#2C3A20" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="66" y1="96" x2="68" y2="30" stroke="#2C3A20" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Bamboo joints -->
+        <line x1="25" y1="70" x2="31" y2="70" stroke="#354220" stroke-width="2"/>
+        <line x1="24" y1="45" x2="30" y2="44" stroke="#354220" stroke-width="2"/>
+        <line x1="53" y1="60" x2="57" y2="60" stroke="#354220" stroke-width="1.5"/>
+        <line x1="67" y1="65" x2="70" y2="65" stroke="#354220" stroke-width="1.5"/>
+        <!-- Leaves -->
+        <ellipse cx="18" cy="12" rx="14" ry="4" fill="#3A4C28" transform="rotate(-30 18 12)" opacity=".85"/>
+        <ellipse cx="32" cy="6"  rx="11" ry="3.5" fill="#3A4C28" transform="rotate(20 32 6)" opacity=".7"/>
+        <ellipse cx="60" cy="20" rx="12" ry="3.5" fill="#3A4C28" transform="rotate(-25 60 20)" opacity=".75"/>
+        <ellipse cx="76" cy="28" rx="10" ry="3"   fill="#3A4C28" transform="rotate(18 76 28)" opacity=".65"/>
+        <ellipse cx="45" cy="25" rx="9"  rx="3"   ry="3" fill="#3A4C28" transform="rotate(-15 45 25)" opacity=".6"/>
+        <!-- Stone at base -->
+        <ellipse cx="48" cy="93" rx="28" ry="5" fill="#1E1810" opacity=".6"/>
+        <ellipse cx="40" cy="90" rx="14" ry="6" fill="#2A2018" opacity=".5"/>
+        <ellipse cx="58" cy="91" rx="10" ry="5" fill="#241E16" opacity=".4"/>
+      </svg>
+    </div>
+
+    <!-- Kakejiku (hanging scroll) -->
+    <div class="kakejiku-wrap">
+      <div class="kakejiku-roller"></div>
+      <div class="kakejiku-body">
+        <div class="kakejiku-kanji">合　氣　道</div>
+        <div class="kakejiku-quote">
+          "La verdadera victoria es la victoria<br>sobre uno mismo" — O'Sensei
+        </div>
+      </div>
+      <div class="kakejiku-roller"></div>
+    </div>
+
+    <!-- Animated Maneki-neko -->
+    <div class="cat-wrap">
+      <svg viewBox="0 0 62 78" width="52" height="65" style="overflow:visible" aria-label="Gato de la suerte">
+        <!-- body -->
+        <ellipse cx="31" cy="62" rx="19" ry="15" fill="#FFFAF5"/>
+        <!-- belly -->
+        <ellipse cx="31" cy="65" rx="10" ry="9" fill="#FFF" opacity=".45"/>
+        <!-- head -->
+        <circle cx="31" cy="30" r="20" fill="#FFFAF5"/>
+        <!-- left ear outer -->
+        <polygon points="11,17 15,3 23,17" fill="#FFFAF5"/>
+        <polygon points="13,17 16,7 22,17" fill="#FFB7C5"/>
+        <!-- right ear outer -->
+        <polygon points="39,17 47,3 51,17" fill="#FFFAF5"/>
+        <polygon points="40,17 46,7 49,17" fill="#FFB7C5"/>
+        <!-- tabby head markings -->
+        <ellipse cx="21" cy="24" rx="5" ry="4" fill="#F0C090" opacity=".3"/>
+        <ellipse cx="41" cy="24" rx="5" ry="4" fill="#F0C090" opacity=".3"/>
+        <!-- eyes -->
+        <ellipse cx="23.5" cy="29" rx="4.2" ry="4.8" fill="#1A1A2E"/>
+        <ellipse cx="38.5" cy="29" rx="4.2" ry="4.8" fill="#1A1A2E"/>
+        <circle  cx="25.2" cy="27"  r="1.7" fill="white"/>
+        <circle  cx="40.2" cy="27"  r="1.7" fill="white"/>
+        <!-- nose -->
+        <ellipse cx="31" cy="35.5" rx="2.2" ry="1.4" fill="#FF9BAA"/>
+        <!-- mouth -->
+        <path d="M28.5 37.2 Q31 40.8 33.5 37.2" stroke="#C9A090" stroke-width=".9" fill="none"/>
+        <!-- whiskers -->
+        <line x1="9"  y1="35"   x2="27" y2="35.5" stroke="#D4C0A8" stroke-width=".65"/>
+        <line x1="9"  y1="38.5" x2="27" y2="37.8" stroke="#D4C0A8" stroke-width=".65"/>
+        <line x1="35" y1="35.5" x2="53" y2="35"   stroke="#D4C0A8" stroke-width=".65"/>
+        <line x1="35" y1="37.8" x2="53" y2="38.5" stroke="#D4C0A8" stroke-width=".65"/>
+        <!-- collar -->
+        <path d="M12 46 Q31 54 50 46" stroke="#C84040" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <!-- bell -->
+        <ellipse cx="31" cy="50" rx="4.2" ry="3.4" fill="#DFA050"/>
+        <ellipse cx="31" cy="52.2" rx="1.3" ry="1" fill="#A06010"/>
+        <!-- RAISED PAW with wave animation -->
+        <g class="cat-paw">
+          <path d="M49 40 Q62 25 58 14 Q54 6 48 11 Q46 15 48 26 Q50 35 49 40" fill="#FFFAF5"/>
+          <ellipse cx="56" cy="12" rx="3.2" ry="2.6" fill="#FFFAF5"/>
+          <ellipse cx="52" cy="8.5" rx="2.6" ry="2.1" fill="#FFFAF5"/>
+          <ellipse cx="60" cy="10" rx="2.6" ry="2.1" fill="#FFFAF5"/>
+        </g>
+        <!-- left arm down -->
+        <path d="M13 52 Q4 60 6 69" stroke="#FFFAF5" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- gold coin -->
+        <circle cx="19" cy="74" r="6.5" fill="#DFA050" opacity=".9"/>
+        <text x="19" y="77.5" text-anchor="middle" font-size="7" fill="#7A4500" font-family="serif" font-weight="bold">大</text>
+      </svg>
+      <div class="cat-label">招き猫</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
 <main class="main">
 
-<!-- ═════════ LEFT: TIMER ═════════ -->
-<div class="panel-timer">
+  <!-- ═══════ LEFT: TIMER ═══════ -->
+  <div class="panel-timer">
 
-  <div class="mode-tabs">
-    <button class="mode-tab active" data-mode="focus"     onclick="setMode('focus')">Concentración</button>
-    <button class="mode-tab"        data-mode="break"     onclick="setMode('break')">Descanso</button>
-    <button class="mode-tab"        data-mode="longBreak" onclick="setMode('longBreak')">Desc. largo</button>
-  </div>
-
-  <div class="timer-wrap">
-    <svg class="timer-svg" width="210" height="210" viewBox="0 0 210 210" aria-hidden="true">
-      <circle class="timer-track" cx="105" cy="105" r="80"/>
-      <circle class="timer-arc" id="timerArc" cx="105" cy="105" r="80" stroke="#E8A245" stroke-dasharray="502.65" stroke-dashoffset="0"/>
-    </svg>
-    <div class="timer-center">
-      <div class="timer-digits" id="timerDisplay">25:00</div>
-      <div class="timer-mode-label" id="modeLabel">Concentración</div>
-      <div class="timer-running-dot" id="runningDot" style="background:var(--amber)"></div>
+    <!-- Enso decorative circle behind timer -->
+    <div class="enso-bg" aria-hidden="true">
+      <svg viewBox="0 0 230 230" width="230" height="230">
+        <!-- outer glow ring -->
+        <circle cx="115" cy="115" r="108" fill="none"
+          stroke="rgba(80,50,20,0.04)" stroke-width="16"/>
+        <!-- enso brushstroke approximation -->
+        <circle cx="115" cy="115" r="100" fill="none"
+          stroke="rgba(80,50,20,0.055)" stroke-width="10"
+          stroke-dasharray="560 60" stroke-dashoffset="40"
+          stroke-linecap="round" transform="rotate(-95 115 115)"/>
+        <!-- inner whisper ring -->
+        <circle cx="115" cy="115" r="88" fill="none"
+          stroke="rgba(80,50,20,0.022)" stroke-width="1"/>
+      </svg>
     </div>
-  </div>
 
-  <div class="controls">
-    <button class="btn-icon" onclick="resetTimer()" title="Reiniciar">↺</button>
-    <button class="btn-main btn-focus" id="startBtn" onclick="toggleTimer()">Comenzar</button>
-    <button class="btn-icon" onclick="skipToNext()" title="Saltar">⏭</button>
-  </div>
-
-  <div class="sessions-wrap">
-    <div class="sessions-label">Ciclo · 4 sesiones = descanso largo</div>
-    <div class="sessions-dots" id="sessionsDots"></div>
-  </div>
-
-  <button class="settings-toggle" onclick="toggleSettings()">⚙ Ajustar tiempos</button>
-  <div class="settings-panel" id="settingsPanel">
-    <div class="settings-divider">Pomodoro</div>
-    <div class="settings-grid-4">
-      <div class="setting-item"><label>Concentración</label><input type="number" id="focusInput" value="25" min="1" max="120"><div class="unit">min</div></div>
-      <div class="setting-item"><label>Descanso</label><input type="number" id="breakInput" value="5" min="1" max="60"><div class="unit">min</div></div>
-      <div class="setting-item"><label>Desc. largo</label><input type="number" id="longBreakInput" value="15" min="5" max="60"><div class="unit">min</div></div>
-      <div class="setting-item"><label>Sesión física</label><input type="number" id="physInput" value="3" min="1" max="15"><div class="unit">min</div></div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="focus"     onclick="setMode('focus')">Concentración</button>
+      <button class="mode-tab"        data-mode="break"     onclick="setMode('break')">Descanso</button>
+      <button class="mode-tab"        data-mode="longBreak" onclick="setMode('longBreak')">Desc. largo</button>
     </div>
-    <button class="settings-apply" onclick="applySettings()">Aplicar cambios ✓</button>
+
+    <div class="timer-wrap">
+      <svg class="timer-svg" width="210" height="210" viewBox="0 0 210 210" aria-hidden="true">
+        <circle class="timer-track" cx="105" cy="105" r="80"/>
+        <circle class="timer-arc" id="timerArc" cx="105" cy="105" r="80" stroke="#DFA050" stroke-dasharray="502.65" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-center">
+        <div class="timer-digits" id="timerDisplay">25:00</div>
+        <div class="timer-mode-label" id="modeLabel">Concentración</div>
+        <div class="timer-running-dot" id="runningDot" style="background:var(--amber)"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-icon" onclick="resetTimer()" title="Reiniciar">↺</button>
+      <button class="btn-main btn-focus" id="startBtn" onclick="toggleTimer()">Comenzar</button>
+      <button class="btn-icon" onclick="skipToNext()" title="Saltar">⏭</button>
+    </div>
+
+    <div class="sessions-wrap">
+      <div class="sessions-label">Ciclo · 4 = descanso largo</div>
+      <div class="sessions-dots" id="sessionsDots"></div>
+    </div>
+
+    <div class="ki-phrase" id="kiPhrase">和 · wa · armonía</div>
+
+    <button class="settings-toggle" onclick="toggleSettings()">⚙ Ajustar tiempos</button>
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-divider">Pomodoro</div>
+      <div class="settings-grid-4">
+        <div class="setting-item"><label>Concentración</label><input type="number" id="focusInput" value="25" min="1" max="120"><div class="unit">min</div></div>
+        <div class="setting-item"><label>Descanso</label><input type="number" id="breakInput" value="5" min="1" max="60"><div class="unit">min</div></div>
+        <div class="setting-item"><label>Desc. largo</label><input type="number" id="longBreakInput" value="15" min="5" max="60"><div class="unit">min</div></div>
+        <div class="setting-item"><label>Sesión física</label><input type="number" id="physInput" value="3" min="1" max="15"><div class="unit">min</div></div>
+      </div>
+      <button class="settings-apply" onclick="applySettings()">Aplicar cambios ✓</button>
+    </div>
+
   </div>
 
-  <!-- Cat caption -->
-  <div class="cat-label" style="color:var(--muted);font-size:.6rem;letter-spacing:.08em;margin-top:-.4rem;">招き猫 · trae suerte</div>
+  <!-- ═══════ RIGHT: TASKS · MEETINGS · TIPS ═══════ -->
+  <div class="panel-right">
 
-</div>
-
-<!-- ═════════ RIGHT: TASKS + MEETINGS + TIPS ═════════ -->
-<div class="panel-right">
-
-  <!-- Tasks -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Tareas del día</span>
-      <span class="task-counter" id="taskCounter">0 / 0</span>
+    <!-- Tasks -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Tareas del día</span>
+        <span class="meta-badge" id="taskCounter">0 / 0</span>
+      </div>
+      <div class="input-row">
+        <input class="text-input" id="taskInput" placeholder="Agregá una tarea…" onkeydown="if(event.key==='Enter')addTask()" maxlength="120">
+        <button class="btn-add" onclick="addTask()">+</button>
+      </div>
+      <div class="scroll-list" id="taskList"><div class="empty-msg">Tu lista está vacía.</div></div>
     </div>
-    <div class="task-input-row">
-      <input class="text-input" id="taskInput" placeholder="Agregá una tarea…" onkeydown="if(event.key==='Enter')addTask()" maxlength="120">
-      <button class="btn-add" onclick="addTask()">+</button>
+
+    <!-- Meetings -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Reuniones del día</span>
+        <span class="meta-badge" id="meetingCounter">0</span>
+      </div>
+      <div class="input-row">
+        <input class="time-input" id="meetingTime" type="time">
+        <input class="text-input" id="meetingInput" placeholder="Nombre de la reunión…" onkeydown="if(event.key==='Enter')addMeeting()" maxlength="80">
+        <button class="btn-add" onclick="addMeeting()">+</button>
+      </div>
+      <div class="scroll-list" id="meetingList"><div class="empty-msg">Sin reuniones agendadas.</div></div>
     </div>
-    <div class="scroll-list" id="taskList"><div class="empty-msg">Tu lista está vacía.</div></div>
+
+    <!-- Tips -->
+    <div class="section-tips">
+      <div class="section-header">
+        <span class="section-title">Bienestar</span>
+      </div>
+      <div class="tips-grid" id="tipsList"></div>
+    </div>
+
   </div>
-
-  <!-- Meetings -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Reuniones del día</span>
-      <span class="task-counter" id="meetingCounter">0</span>
-    </div>
-    <div class="task-input-row">
-      <input class="time-input" id="meetingTime" type="time">
-      <input class="text-input" id="meetingInput" placeholder="Nombre de la reunión…" onkeydown="if(event.key==='Enter')addMeeting()" maxlength="80">
-      <button class="btn-add" onclick="addMeeting()">+</button>
-    </div>
-    <div class="scroll-list" id="meetingList"><div class="empty-msg">Sin reuniones agendadas.</div></div>
-  </div>
-
-  <!-- Tips -->
-  <div class="section-tips">
-    <div class="section-header">
-      <span class="section-title">Consejos de bienestar</span>
-    </div>
-    <div class="tips-grid" id="tipsList"></div>
-  </div>
-
-</div>
 </main>
 
-<!-- ═════════ PHYSICAL OVERLAY ═════════ -->
+<!-- ═══════ PHYSICAL SESSION OVERLAY ═══════ -->
 <div class="phys-overlay" id="physOverlay">
   <div class="phys-topbar">
     <div class="phys-badge"><div class="phys-badge-dot"></div>Actividad física y cuidados</div>
@@ -342,17 +823,18 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
   </div>
   <div class="phys-body">
     <div class="phys-ring-wrap">
-      <svg class="phys-ring-svg" width="185" height="185" viewBox="0 0 185 185" aria-hidden="true">
-        <circle class="phys-ring-track" cx="92.5" cy="92.5" r="75"/>
-        <circle class="phys-ring-arc" id="physArc" cx="92.5" cy="92.5" r="75" stroke-dasharray="471.24" stroke-dashoffset="0"/>
+      <svg class="phys-ring-svg" width="180" height="180" viewBox="0 0 180 180" aria-hidden="true">
+        <circle class="phys-ring-track" cx="90" cy="90" r="75"/>
+        <circle class="phys-ring-arc" id="physArc" cx="90" cy="90" r="75" stroke-dasharray="471.24" stroke-dashoffset="0"/>
       </svg>
       <div class="phys-ring-center">
-        <div class="phys-ex-icon" id="physIcon">🚶</div>
+        <div class="phys-ex-icon" id="physIcon">🌀</div>
         <div class="phys-ring-timer" id="physExTimer">45s</div>
       </div>
     </div>
-    <div class="phys-ex-name" id="physName">Caminá por el cuarto</div>
-    <div class="phys-ex-desc" id="physDesc">Hacé circuitos amplios. Mové los brazos.</div>
+    <div class="phys-ex-kanji" id="physKanji"></div>
+    <div class="phys-ex-name" id="physName">Kokyu-ho</div>
+    <div class="phys-ex-desc" id="physDesc">Respirá con el abdomen.</div>
     <div class="phys-ex-tip"  id="physTip"></div>
     <div class="phys-dots"    id="physDots"></div>
     <div class="phys-controls">
@@ -360,463 +842,369 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
       <button class="phys-btn-skip" onclick="skipPhysicalSession()">Saltar sesión</button>
     </div>
   </div>
+  <div class="phys-aikido-quote" id="aikidoQuote"></div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  DATA
-// ══════════════════════════════════════════════════════
+// ══ DATA ══════════════════════════════════════════════════════════════
 const EXERCISES = [
-  { icon:'🚶', name:'Caminá por el cuarto',    desc:'Hacé varios circuitos amplios. Levantá las rodillas y mové los brazos.',           tip:'Activa la circulación y resetea la mente.' },
-  { icon:'🔄', name:'Rotaciones de cuello',     desc:'Suave y lento: 5 círculos hacia la derecha, 5 hacia la izquierda.',               tip:'Ideal cuando tensás el cuello mirando la pantalla.' },
-  { icon:'💪', name:'Encogimientos de hombros', desc:'Llevá los hombros a las orejas, mantenelos 2 segundos y soltá. 12 veces.',        tip:'Libera la tensión acumulada en los trapecios.' },
-  { icon:'🦵', name:'Sentadillas',              desc:'10 sentadillas lentas y controladas. Rodillas alineadas con los pies.',            tip:'Reactiva los músculos que se duermen al sentarse.' },
-  { icon:'🤸', name:'Estiramiento lateral',     desc:'Un brazo sobre la cabeza, inclinarte al lado opuesto. 20 segundos cada lado.',    tip:'Abre los costados del tronco y la columna.' },
-  { icon:'🧘', name:'Estiramiento de espalda',  desc:'Entrelazá los dedos, extendé los brazos al frente y redondea la espalda. 20s.',   tip:'Contrarresta horas de postura encorvada.' },
-  { icon:'🦶', name:'Puntillas',                desc:'Subí y bajá en puntas de pie 20 veces, lento y controlado.',                      tip:'Mejora la circulación en pantorrillas y pies.' },
-  { icon:'✋', name:'Estiramiento de muñecas',  desc:'Extendé el brazo, llevá los dedos hacia atrás con la otra mano. 15s cada lado.',   tip:'Previene el síndrome del túnel carpiano.' },
-  { icon:'🌬️', name:'Respiración profunda',    desc:'Inhalá en 4 tiempos, retené 4, exhalá en 6. Repetí 6 veces con ojos cerrados.',   tip:'Activa el sistema nervioso parasimpático.' },
-  { icon:'🏋️', name:'Flexiones en pared',      desc:'Manos en la pared, 10 flexiones lentas. Cuerpo recto como tabla.',                tip:'Activa pecho, hombros y brazos sin equipamiento.' },
-  { icon:'🪑', name:'Estiramiento de cadera',  desc:'De pie, llevá una rodilla al pecho y mantené 20 segundos. Cambiá de lado.',       tip:'Libera el flexor de cadera tenso al sentarse.' },
-  { icon:'👁️', name:'Descanso visual activo',  desc:'Cerrá los ojos 30s. Luego mirá algo a más de 6 metros por 20 segundos.',          tip:'Regla 20-20-20: reduce significativamente la fatiga ocular.' },
+  { icon:'🌀', name:'Kokyu-ho (呼吸法)',      kanji:'呼吸法',  desc:'Inhalá 4s llenando el abdomen, retené 2s, exhalá 6s. La base del ki en Aikido.',            tip:'El kokyu conecta el cuerpo con el espíritu.' },
+  { icon:'🖐️', name:'Tekubi kosa undo',      kanji:'手首交差', desc:'Muñecas cruzadas: extendé, doblá suavemente hacia atrás y adelante. 10 veces cada lado.',    tip:'Fundamental para soltar y fortalecer la muñeca.' },
+  { icon:'🔄', name:'Ikkyo-undo',             kanji:'一教運動', desc:'Ambos brazos en arco frente al cuerpo: arriba, abre, abajo. Lento. 10 repeticiones.',         tip:'El primer principio del Aikido: extensión circular.' },
+  { icon:'🚶', name:'Tenkan-undo (転換)',     kanji:'転換運動', desc:'Un paso al costado pivotando 180°. Mantené el centro bajo. 5 veces a cada lado.',             tip:'Ceder y redirigir: la esencia del Aikido.' },
+  { icon:'🧘', name:'Furitama (振り魂)',      kanji:'振り魂',  desc:'Manos frente al hara (abdomen), vibrá suavemente todo el cuerpo. 30 segundos sin tensión.',   tip:'Despierta y asienta el ki. Ejercicio clásico de Aikido.' },
+  { icon:'🦵', name:'Shiko-ashi (四股)',      kanji:'四股',    desc:'10 sentadillas amplias como la postura de sumo. Rodillas abiertas, espalda erguida.',          tip:'Desarrolla la postura hanmi y el centro de gravedad bajo.' },
+  { icon:'💪', name:'Katate-dosa',            kanji:'片手動作', desc:'Extendé un brazo hacia el frente con intención, abrí los dedos. Alternás 10 veces.',          tip:'Ejercita la extensión de ki hacia las puntas de los dedos.' },
+  { icon:'🌬️', name:'Ma (間) — el espacio',  kanji:'間',      desc:'Cerrá los ojos. Respirá. Observá el espacio entre tus pensamientos. 30 segundos.',             tip:'El "ma" es la pausa esencial — entre movimientos, entre ideas.' },
+  { icon:'🤸', name:'Estiramiento lateral',   kanji:'側伸び',  desc:'Un brazo sobre la cabeza, inclinarte al lado opuesto. 20 segundos cada lado.',                 tip:'Abre los costados del tronco y la columna.' },
+  { icon:'🦶', name:'Puntillas',              kanji:'',        desc:'Subí y bajá en puntas de pie 20 veces, lento y controlado.',                                    tip:'Mejora la circulación en pantorrillas y pies.' },
+  { icon:'✋', name:'Estiramiento de muñecas', kanji:'手首',   desc:'Extendé el brazo, llevá los dedos hacia atrás con la otra mano. 15s cada lado.',                tip:'Previene el síndrome del túnel carpiano.' },
+  { icon:'👁️', name:'Descanso visual',        kanji:'目の休憩', desc:'Cerrá los ojos 30s. Luego enfocá algo a más de 6 metros durante 20 segundos.',               tip:'Regla 20-20-20: reduce la fatiga ocular significativamente.' },
+];
+
+const AIKIDO_QUOTES = [
+  '"La verdadera victoria es la victoria sobre uno mismo." — O\'Sensei',
+  '"El Aikido es amor. Protegé a todos, incluso a tu oponente." — O\'Sensei',
+  '"El ki fluye donde la mente se concentra." — Koichi Tohei',
+  '"Antes de estudiar el Aikido, una persona es una persona. Después, sigue siendo una persona." — O\'Sensei',
+  '"Mantené tu ki fluyendo. El pensamiento es movimiento antes del movimiento." — Shunryu Suzuki',
 ];
 
 const TIPS = [
-  { icon:'💧', text:'Tomá agua — la hidratación mejora la concentración y el estado de ánimo.',       bg:'rgba(55,138,221,0.1)'  },
-  { icon:'🚶', text:'Pausa activa — caminá 2 minutos entre sesiones para resetear el cuerpo.',        bg:'rgba(30,158,117,0.1)'  },
-  { icon:'👁️', text:'Regla 20-20-20: cada 20 min, enfocá algo a 6 m durante 20 segundos.',           bg:'rgba(127,119,221,0.1)' },
-  { icon:'🧍', text:'Pararme — levantarte unos minutos reduce la fatiga y mejora la circulación.',    bg:'rgba(232,162,69,0.1)'  },
-  { icon:'🔄', text:'Ejercitar espalda y hombros — círculos, extensiones y rotaciones de cuello.',    bg:'rgba(208,90,48,0.1)'   },
-  { icon:'🌬️', text:'Respiración 4-7-8: inhalá 4s, retené 7s, exhalá 8s. Relaja el sistema nervioso.', bg:'rgba(78,207,176,0.1)' },
-  { icon:'😌', text:'Cerrar los ojos 20 segundos — descanso visual rápido y efectivo.',               bg:'rgba(155,143,232,0.1)' },
-  { icon:'🙆', text:'Estirar cuello, muñecas y piernas — previene tensión muscular y lesiones.',      bg:'rgba(99,153,34,0.1)'   },
-  { icon:'🌿', text:'Mirá algo verde o natural unos instantes — baja el cortisol y recarga la atención.', bg:'rgba(30,158,117,0.1)' },
+  { icon:'💧', tag:'', text:'Tomá agua — la hidratación mejora la concentración y el estado de ánimo.', bg:'rgba(55,138,221,0.09)' },
+  { icon:'和',  tag:'wa · armonía', text:'Buscá el equilibrio entre esfuerzo y pausa. El exceso de tensión rompe el flujo.', bg:'rgba(223,160,80,0.08)', kanji:true },
+  { icon:'🚶', tag:'', text:'Pausa activa — caminá 2 minutos entre sesiones para resetear el cuerpo.', bg:'rgba(30,158,117,0.09)' },
+  { icon:'気',  tag:'ki · energía', text:'La energía sigue la atención. Enfocá donde querés estar, no en lo que querés evitar.', bg:'rgba(78,207,176,0.08)', kanji:true },
+  { icon:'👁️', tag:'', text:'Regla 20-20-20: cada 20 min, mirá algo a 6 m de distancia durante 20 segundos.', bg:'rgba(127,119,221,0.09)' },
+  { icon:'間',  tag:'ma · espacio', text:'El silencio entre notas es lo que hace la música. La pausa entre tareas hace el trabajo.', bg:'rgba(146,128,224,0.08)', kanji:true },
+  { icon:'🔄', tag:'', text:'Ejercitar espalda y hombros — círculos, extensiones y rotaciones de cuello.',   bg:'rgba(208,90,48,0.09)' },
+  { icon:'🌬️', tag:'', text:'Respiración 4-7-8: inhalá 4s, retené 7s, exhalá 8s. Activa el nervio vago.', bg:'rgba(78,207,176,0.09)' },
+  { icon:'🌿', tag:'', text:'Mirá algo natural unos instantes — baja el cortisol y recarga la atención.',    bg:'rgba(30,158,117,0.09)' },
 ];
 
-// ══════════════════════════════════════════════════════
-//  CONSTANTS
-// ══════════════════════════════════════════════════════
+// ══ CONSTANTS ════════════════════════════════════════════════════════
 const R_MAIN = 80; const C_MAIN = +(2*Math.PI*R_MAIN).toFixed(2); // 502.65
 const R_PHYS = 75; const C_PHYS = +(2*Math.PI*R_PHYS).toFixed(2); // 471.24
-const EX_DURATION = 45; // seconds per exercise
+const EX_DURATION = 45;
 
-// ══════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════
-let mode       = 'focus';
-let isRunning  = false;
-let timeLeft   = 25 * 60;
-let totalTime  = 25 * 60;
-let sessions   = 0;
-let interval   = null;
-let sessionEndAt = 0; // wall-clock target (Date-based timing)
-let soundOn    = true;
+const KI_PHRASES = ['和 · wa · armonía','気 · ki · energía','間 · ma · espacio','道 · do · camino','合 · ai · unión'];
+let kiIdx = 0;
 
+// ══ STATE ════════════════════════════════════════════════════════════
+let mode='focus', isRunning=false, timeLeft=25*60, totalTime=25*60;
+let sessions=0, interval=null, sessionEndAt=0, soundOn=true;
 const cfg = { focus:25, break:5, longBreak:15, physical:3 };
 
-// Physical
-let physActive       = false;
-let pendingBreak     = 'break';
-let physTimeLeft     = 0;
-let physTotalSecs    = 0;
-let physInterval     = null;
-let physEndAt        = 0;
-let physExIdx        = 0;  // global exercise cursor
-let physExTimeLeft   = 0;
-let physExEndAt      = 0;
-let physSessionExs   = [];
-let physSlot         = 0;
+let physActive=false, pendingBreak='break', physTimeLeft=0, physTotalSecs=0;
+let physInterval=null, physEndAt=0, physExIdx=0, physExTimeLeft=0, physExEndAt=0;
+let physSessionExs=[], physSlot=0;
 
-// Tasks & meetings
-let taskSeq    = 0;
-const tasks    = [];
-let meetingSeq = 0;
-const meetings = [];
-let meetingCheckInterval = null;
+let taskSeq=0; const tasks=[];
+let meetingSeq=0; const meetings=[];
 
-// ══════════════════════════════════════════════════════
-//  CLOCK + TAB TITLE
-// ══════════════════════════════════════════════════════
+// ══ CLOCK ════════════════════════════════════════════════════════════
 function updateClock() {
-  const n = new Date(), p = v => String(v).padStart(2,'0');
-  document.getElementById('clock').textContent =
-    `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
-  // Update tab title with remaining time
-  if (isRunning || physActive) {
-    const t = physActive ? physTimeLeft : timeLeft;
-    document.title = `${fmt(t)} · Foco`;
-  } else {
-    document.title = '🍅 Foco';
-  }
+  const n=new Date(), p=v=>String(v).padStart(2,'0');
+  document.getElementById('clock').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+  document.title = isRunning||physActive ? `${fmt(physActive?physTimeLeft:timeLeft)} · Foco` : '🍅 Foco';
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(updateClock,1000); updateClock();
 
-// Resync on tab focus (background drift correction)
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    if (isRunning && sessionEndAt) {
-      timeLeft = Math.max(0, Math.round((sessionEndAt - Date.now()) / 1000));
-      renderTimerUI();
-      if (timeLeft === 0) { clearInterval(interval); isRunning = false; onTimerEnd(); }
-    }
-    if (physActive && physEndAt) {
-      physTimeLeft = Math.max(0, Math.round((physEndAt - Date.now()) / 1000));
-      physExTimeLeft = Math.max(0, Math.round((physExEndAt - Date.now()) / 1000));
-      if (physTimeLeft === 0) endPhysicalSession();
-    }
+// Rotate ki phrase every 30s
+setInterval(()=>{
+  kiIdx=(kiIdx+1)%KI_PHRASES.length;
+  const el=document.getElementById('kiPhrase');
+  el.style.opacity='0';
+  setTimeout(()=>{ el.textContent=KI_PHRASES[kiIdx]; el.style.opacity=''; },400);
+  document.getElementById('kiPhrase').style.transition='opacity .4s';
+},30000);
+
+// Tab visibility resync
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible') return;
+  if(isRunning&&sessionEndAt){
+    timeLeft=Math.max(0,Math.round((sessionEndAt-Date.now())/1000));
+    renderTimerUI();
+    if(timeLeft===0){ clearInterval(interval); isRunning=false; onTimerEnd(); }
+  }
+  if(physActive&&physEndAt){
+    physTimeLeft=Math.max(0,Math.round((physEndAt-Date.now())/1000));
+    physExTimeLeft=Math.max(0,Math.round((physExEndAt-Date.now())/1000));
+    if(physTimeLeft===0) endPhysicalSession();
   }
 });
 
-// ══════════════════════════════════════════════════════
-//  TIMER UI
-// ══════════════════════════════════════════════════════
-const COLORS  = { focus:'#E8A245', break:'#4ECFB0', longBreak:'#9B8FE8' };
-const LABELS  = { focus:'Concentración', break:'Descanso', longBreak:'Descanso largo' };
-const BTN_CLS = { focus:'btn-focus', break:'btn-break', longBreak:'btn-longbreak' };
+// ══ TIMER UI ═════════════════════════════════════════════════════════
+const COLORS  = {focus:'#DFA050',break:'#4BBFA8',longBreak:'#9280E0'};
+const LABELS  = {focus:'Concentración',break:'Descanso',longBreak:'Descanso largo'};
+const BTN_CLS = {focus:'btn-focus',break:'btn-break',longBreak:'btn-longbreak'};
 
-function fmt(s) {
-  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+function fmt(s){ return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+
+function renderTimerUI(){
+  document.getElementById('timerDisplay').textContent=fmt(timeLeft);
+  document.getElementById('timerDisplay').style.color=COLORS[mode];
+  const progress=totalTime>0?timeLeft/totalTime:0;
+  const arc=document.getElementById('timerArc');
+  arc.style.strokeDashoffset=C_MAIN*(1-progress);
+  arc.style.stroke=COLORS[mode];
+  document.getElementById('runningDot').classList.toggle('visible',isRunning);
+  document.getElementById('runningDot').style.background=COLORS[mode];
+  document.getElementById('modeLabel').textContent=LABELS[mode];
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===mode));
+  const btn=document.getElementById('startBtn');
+  btn.className=`btn-main ${BTN_CLS[mode]}`;
+  btn.textContent=isRunning?'Pausar':(timeLeft<totalTime?'Continuar':'Comenzar');
 }
 
-function renderTimerUI() {
-  document.getElementById('timerDisplay').textContent = fmt(timeLeft);
-  document.getElementById('timerDisplay').style.color = COLORS[mode];
-  const progress = totalTime > 0 ? timeLeft / totalTime : 0;
-  const arc = document.getElementById('timerArc');
-  arc.style.strokeDashoffset = C_MAIN * (1 - progress);
-  arc.style.stroke = COLORS[mode];
-  document.getElementById('runningDot').classList.toggle('visible', isRunning);
-  document.getElementById('runningDot').style.background = COLORS[mode];
-  document.getElementById('modeLabel').textContent = LABELS[mode];
-  document.querySelectorAll('.mode-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.mode === mode));
-  const btn = document.getElementById('startBtn');
-  btn.className = `btn-main ${BTN_CLS[mode]}`;
-  btn.textContent = isRunning ? 'Pausar' : (timeLeft < totalTime ? 'Continuar' : 'Comenzar');
+function renderSessionsDots(){
+  const pos=sessions%4;
+  document.getElementById('sessionsDots').innerHTML=Array.from({length:4},(_,i)=>
+    `<div class="sdot${i<pos?' done':''}"></div>`).join('');
 }
 
-function renderSessionsDots() {
-  const wrap = document.getElementById('sessionsDots');
-  const pos  = sessions % 4;
-  wrap.innerHTML = Array.from({length:4}, (_,i) =>
-    `<div class="sdot${i < pos ? ' done' : ''}"></div>`).join('');
+// ══ TIMER LOGIC (Date-based) ══════════════════════════════════════════
+function setMode(m,skipRender){
+  clearInterval(interval); isRunning=false; sessionEndAt=0;
+  mode=m; timeLeft=cfg[m]*60; totalTime=timeLeft;
+  if(!skipRender){ renderTimerUI(); renderSessionsDots(); }
 }
 
-// ══════════════════════════════════════════════════════
-//  TIMER LOGIC  (Date-based → background-safe)
-// ══════════════════════════════════════════════════════
-function setMode(m, skipRender) {
-  clearInterval(interval);
-  isRunning = false; sessionEndAt = 0;
-  mode      = m;
-  timeLeft  = cfg[m] * 60;
-  totalTime = timeLeft;
-  if (!skipRender) { renderTimerUI(); renderSessionsDots(); }
-}
-
-function toggleTimer() {
-  if (isRunning) {
-    clearInterval(interval);
-    isRunning    = false;
-    sessionEndAt = 0;
-  } else {
-    isRunning    = true;
-    sessionEndAt = Date.now() + timeLeft * 1000;
-    interval     = setInterval(tick, 500);
-  }
+function toggleTimer(){
+  if(isRunning){ clearInterval(interval); isRunning=false; sessionEndAt=0; }
+  else { isRunning=true; sessionEndAt=Date.now()+timeLeft*1000; interval=setInterval(tick,500); }
   renderTimerUI();
 }
 
-function tick() {
-  const remaining = Math.round((sessionEndAt - Date.now()) / 1000);
-  if (remaining <= 0) {
-    timeLeft = 0; renderTimerUI();
-    clearInterval(interval); isRunning = false; sessionEndAt = 0;
-    onTimerEnd(); return;
-  }
-  timeLeft = remaining;
-  renderTimerUI();
+function tick(){
+  const r=Math.round((sessionEndAt-Date.now())/1000);
+  if(r<=0){ timeLeft=0; renderTimerUI(); clearInterval(interval); isRunning=false; sessionEndAt=0; onTimerEnd(); return; }
+  timeLeft=r; renderTimerUI();
 }
 
-function onTimerEnd() {
-  if (soundOn) playBeep();
-  if (mode === 'focus') {
-    sessions++;
-    renderSessionsDots();
-    pendingBreak = sessions % 4 === 0 ? 'longBreak' : 'break';
+function onTimerEnd(){
+  if(soundOn) playBeep();
+  if(mode==='focus'){
+    sessions++; renderSessionsDots();
+    pendingBreak=sessions%4===0?'longBreak':'break';
     startPhysicalSession();
-  } else {
-    setMode('focus');
-    showToast('💪 ¡Descanso terminado! A concentrarse de nuevo.');
-  }
+  } else { setMode('focus'); showToast('💪 ¡Descansaste! A concentrarse de nuevo.'); }
   renderTimerUI();
 }
 
-function resetTimer() {
-  clearInterval(interval); isRunning = false; sessionEndAt = 0;
-  timeLeft = cfg[mode] * 60; totalTime = timeLeft;
-  renderTimerUI();
+function resetTimer(){
+  clearInterval(interval); isRunning=false; sessionEndAt=0;
+  timeLeft=cfg[mode]*60; totalTime=timeLeft; renderTimerUI();
 }
 
-function skipToNext() {
-  clearInterval(interval); isRunning = false; sessionEndAt = 0;
-  timeLeft = 0; onTimerEnd();
+function skipToNext(){
+  clearInterval(interval); isRunning=false; sessionEndAt=0;
+  timeLeft=0; onTimerEnd();
 }
 
-// ══════════════════════════════════════════════════════
-//  PHYSICAL SESSION
-// ══════════════════════════════════════════════════════
-function buildPhysExercises() {
-  const count = Math.max(2, Math.ceil(cfg.physical * 60 / EX_DURATION));
-  return Array.from({length:count}, (_, i) => EXERCISES[(physExIdx + i) % EXERCISES.length]);
+// ══ PHYSICAL SESSION ══════════════════════════════════════════════════
+function buildPhysExs(){
+  const count=Math.max(2,Math.ceil(cfg.physical*60/EX_DURATION));
+  return Array.from({length:count},(_,i)=>EXERCISES[(physExIdx+i)%EXERCISES.length]);
 }
 
-function startPhysicalSession() {
-  physActive     = true;
-  physTotalSecs  = cfg.physical * 60;
-  physTimeLeft   = physTotalSecs;
-  physEndAt      = Date.now() + physTimeLeft * 1000;
-  physSessionExs = buildPhysExercises();
-  physSlot       = 0;
-  physExTimeLeft = Math.min(EX_DURATION, physTimeLeft);
-  physExEndAt    = Date.now() + physExTimeLeft * 1000;
+function startPhysicalSession(){
+  physActive=true; physTotalSecs=cfg.physical*60; physTimeLeft=physTotalSecs;
+  physEndAt=Date.now()+physTimeLeft*1000;
+  physSessionExs=buildPhysExs(); physSlot=0;
+  physExTimeLeft=Math.min(EX_DURATION,physTimeLeft);
+  physExEndAt=Date.now()+physExTimeLeft*1000;
   renderPhysOverlay();
   document.getElementById('physOverlay').classList.add('active');
-  physInterval = setInterval(tickPhys, 500);
-  if (soundOn) playChime();
+  // Random quote
+  document.getElementById('aikidoQuote').textContent=AIKIDO_QUOTES[Math.floor(Math.random()*AIKIDO_QUOTES.length)];
+  physInterval=setInterval(tickPhys,500);
+  if(soundOn) playChime();
 }
 
-function tickPhys() {
-  physTimeLeft   = Math.max(0, Math.round((physEndAt    - Date.now()) / 1000));
-  physExTimeLeft = Math.max(0, Math.round((physExEndAt  - Date.now()) / 1000));
-  if (physExTimeLeft <= 0 && physTimeLeft > 0) { advanceExercise(true); return; }
-  if (physTimeLeft  <= 0) { endPhysicalSession(); return; }
-  document.getElementById('physTotalTimer').textContent = fmt(physTimeLeft);
+function tickPhys(){
+  physTimeLeft  =Math.max(0,Math.round((physEndAt  -Date.now())/1000));
+  physExTimeLeft=Math.max(0,Math.round((physExEndAt-Date.now())/1000));
+  if(physExTimeLeft<=0&&physTimeLeft>0){ advanceExercise(true); return; }
+  if(physTimeLeft<=0){ endPhysicalSession(); return; }
+  document.getElementById('physTotalTimer').textContent=fmt(physTimeLeft);
   renderPhysRing();
 }
 
-function advanceExercise(auto) {
-  physSlot   = (physSlot + 1) % physSessionExs.length;
-  physExIdx  = (physExIdx + 1) % EXERCISES.length;
-  physExTimeLeft = Math.min(EX_DURATION, physTimeLeft);
-  physExEndAt    = Date.now() + physExTimeLeft * 1000;
+function advanceExercise(auto){
+  physSlot=(physSlot+1)%physSessionExs.length;
+  physExIdx=(physExIdx+1)%EXERCISES.length;
+  physExTimeLeft=Math.min(EX_DURATION,physTimeLeft);
+  physExEndAt=Date.now()+physExTimeLeft*1000;
   renderPhysOverlay();
-  if (!auto && soundOn) playChime();
+  if(!auto&&soundOn) playChime();
 }
-function nextExercise() { advanceExercise(false); }
+function nextExercise(){ advanceExercise(false); }
 
-function endPhysicalSession() {
-  clearInterval(physInterval);
-  physActive = false;
+function endPhysicalSession(){
+  clearInterval(physInterval); physActive=false;
   document.getElementById('physOverlay').classList.remove('active');
-  setMode(pendingBreak);
-  renderTimerUI(); renderSessionsDots();
-  showToast(pendingBreak === 'longBreak' ? '💚 ¡Sesión física lista! Ahora tu descanso largo 🌿' : '💚 ¡Sesión física lista! Ahora a descansar ☕');
+  setMode(pendingBreak); renderTimerUI(); renderSessionsDots();
+  showToast(pendingBreak==='longBreak'?'💚 ¡Sesión física lista! Merecés el descanso largo 🌿':'💚 ¡Sesión física lista! Ahora a descansar ☕');
 }
 
-function skipPhysicalSession() {
-  clearInterval(physInterval);
-  physActive = false;
+function skipPhysicalSession(){
+  clearInterval(physInterval); physActive=false;
   document.getElementById('physOverlay').classList.remove('active');
-  setMode(pendingBreak);
-  renderTimerUI(); renderSessionsDots();
-  showToast('Sesión física saltada — te espera el descanso.');
+  setMode(pendingBreak); renderTimerUI(); renderSessionsDots();
+  showToast('Sesión física saltada — tu cuerpo agradece el movimiento.');
 }
 
-function renderPhysOverlay() {
-  const ex = physSessionExs[physSlot];
-  document.getElementById('physIcon').textContent = ex.icon;
-  document.getElementById('physName').textContent = ex.name;
-  document.getElementById('physDesc').textContent = ex.desc;
-  document.getElementById('physTip').textContent  = ex.tip;
-  document.getElementById('physTotalTimer').textContent = fmt(physTimeLeft);
-  renderPhysRing();
-  renderPhysDots();
+function renderPhysOverlay(){
+  const ex=physSessionExs[physSlot];
+  document.getElementById('physIcon').textContent=ex.icon;
+  document.getElementById('physKanji').textContent=ex.kanji||'';
+  document.getElementById('physName').textContent=ex.name;
+  document.getElementById('physDesc').textContent=ex.desc;
+  document.getElementById('physTip').textContent=ex.tip;
+  document.getElementById('physTotalTimer').textContent=fmt(physTimeLeft);
+  renderPhysRing(); renderPhysDots();
 }
 
-function renderPhysRing() {
-  const progress = physExTimeLeft / EX_DURATION;
-  document.getElementById('physArc').style.strokeDashoffset = C_PHYS * (1 - progress);
-  document.getElementById('physExTimer').textContent = physExTimeLeft + 's';
+function renderPhysRing(){
+  document.getElementById('physArc').style.strokeDashoffset=C_PHYS*(1-physExTimeLeft/EX_DURATION);
+  document.getElementById('physExTimer').textContent=physExTimeLeft+'s';
 }
 
-function renderPhysDots() {
-  document.getElementById('physDots').innerHTML = physSessionExs.map((_,i) => {
-    const c = i < physSlot ? 'done' : i === physSlot ? 'active' : '';
+function renderPhysDots(){
+  document.getElementById('physDots').innerHTML=physSessionExs.map((_,i)=>{
+    const c=i<physSlot?'done':i===physSlot?'active':'';
     return `<div class="phdot ${c}"></div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  MEETINGS
-// ══════════════════════════════════════════════════════
-function addMeeting() {
-  const timeVal = document.getElementById('meetingTime').value;
-  const nameVal = document.getElementById('meetingInput').value.trim();
-  if (!timeVal || !nameVal) { showToast('Completá el horario y el nombre.'); return; }
-  meetings.push({ id: ++meetingSeq, name: nameVal, time: timeVal, active: false, done: false });
-  meetings.sort((a,b) => a.time.localeCompare(b.time));
-  document.getElementById('meetingInput').value = '';
-  renderMeetings();
+// ══ MEETINGS ══════════════════════════════════════════════════════════
+function addMeeting(){
+  const tv=document.getElementById('meetingTime').value;
+  const nv=document.getElementById('meetingInput').value.trim();
+  if(!tv||!nv){ showToast('Completá el horario y el nombre.'); return; }
+  meetings.push({id:++meetingSeq,name:nv,time:tv,active:false,done:false});
+  meetings.sort((a,b)=>a.time.localeCompare(b.time));
+  document.getElementById('meetingInput').value=''; renderMeetings();
 }
 
-function deleteMeeting(id) {
-  const i = meetings.findIndex(m => m.id === id);
-  if (i > -1) { meetings.splice(i, 1); renderMeetings(); }
+function deleteMeeting(id){
+  const i=meetings.findIndex(m=>m.id===id);
+  if(i>-1){ meetings.splice(i,1); renderMeetings(); }
 }
 
-function endMeetingById(id, action) {
-  const m = meetings.find(m => m.id === id);
-  if (!m) return;
-  m.active = false; m.done = true;
-  renderMeetings();
-  if (action === 'break') {
-    setMode('break');
-    renderTimerUI();
-    showToast('✅ Reunión terminada — comenzando pausa de recuperación ☕');
-  } else {
-    setMode('focus');
-    renderTimerUI();
-    showToast('✅ Reunión terminada — ¡directo a concentrarse! 🍅');
-  }
+function endMeetingById(id,action){
+  const m=meetings.find(m=>m.id===id); if(!m) return;
+  m.active=false; m.done=true; renderMeetings();
+  if(action==='break'){ setMode('break'); renderTimerUI(); showToast('✅ Reunión terminada — pausa de recuperación ☕'); }
+  else { setMode('focus'); renderTimerUI(); showToast('✅ Reunión terminada — directo al foco 🍅'); }
 }
 
-function checkMeetings() {
-  const now  = new Date();
-  const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  meetings.forEach(m => {
-    if (!m.done && !m.active && m.time === hhmm) {
-      m.active = true;
-      // Auto-pause running Pomodoro
-      if (isRunning) {
-        clearInterval(interval); isRunning = false; sessionEndAt = 0;
-        renderTimerUI();
-      }
+function checkMeetings(){
+  const n=new Date();
+  const hhmm=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  meetings.forEach(m=>{
+    if(!m.done&&!m.active&&m.time===hhmm){
+      m.active=true;
+      if(isRunning){ clearInterval(interval); isRunning=false; sessionEndAt=0; renderTimerUI(); }
       renderMeetings();
-      showToast(`🗓 Reunión: "${m.name}" — Pomodoro pausado automáticamente`);
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(`🗓 ${m.name}`, { body:'Tu Pomodoro fue pausado. ¡Buena reunión!' });
-      }
+      showToast(`🗓 Reunión: "${m.name}" — Pomodoro pausado`);
+      if('Notification'in window&&Notification.permission==='granted')
+        new Notification(`🗓 ${m.name}`,{body:'Tu Pomodoro fue pausado. ¡Buena reunión!'});
     }
   });
 }
+setInterval(checkMeetings,30000);
 
-function renderMeetings() {
-  const list = document.getElementById('meetingList');
-  const pending = meetings.filter(m => !m.done).length;
-  document.getElementById('meetingCounter').textContent = pending;
-
-  if (!meetings.length) {
-    list.innerHTML = '<div class="empty-msg">Sin reuniones agendadas.</div>'; return;
-  }
-
-  list.innerHTML = meetings.map(m => {
-    const cls = m.active ? 'active-meeting' : m.done ? 'done-meeting' : '';
-    const actionBtns = m.active
-      ? `<button class="meeting-end-btn" onclick="endMeetingById(${m.id},'break')" title="Terminar y tomar pausa">Terminó · Pausa ☕</button>
-         <button class="meeting-end-btn" style="background:rgba(232,162,69,.12);border-color:rgba(232,162,69,.3);color:var(--amber)" onclick="endMeetingById(${m.id},'focus')" title="Terminar y volver al foco">Terminó · Foco 🍅</button>`
-      : `<button class="del-btn" style="opacity:1" onclick="deleteMeeting(${m.id})">✕</button>`;
+function renderMeetings(){
+  const list=document.getElementById('meetingList');
+  document.getElementById('meetingCounter').textContent=meetings.filter(m=>!m.done).length;
+  if(!meetings.length){ list.innerHTML='<div class="empty-msg">Sin reuniones agendadas.</div>'; return; }
+  list.innerHTML=meetings.map(m=>{
+    const cls=m.active?'active-meeting':m.done?'done-meeting':'';
+    const btns=m.active
+      ?`<div class="meeting-btns">
+          <button class="meeting-end-btn green-btn" onclick="endMeetingById(${m.id},'break')">Pausa ☕</button>
+          <button class="meeting-end-btn amber-btn" onclick="endMeetingById(${m.id},'focus')">Foco 🍅</button>
+        </div>`
+      :`<button class="del-btn" style="opacity:1" onclick="deleteMeeting(${m.id})">✕</button>`;
     return `<div class="meeting-item ${cls}">
       <span class="meeting-time">${m.time}</span>
       <span class="meeting-name">${esc(m.name)}</span>
-      ${actionBtns}
+      ${btns}
     </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  NOTIFICATIONS
-// ══════════════════════════════════════════════════════
-function requestNotifs() {
-  if (!('Notification' in window)) { showToast('Tu navegador no soporta notificaciones.'); return; }
-  Notification.requestPermission().then(p => {
-    const btn = document.getElementById('notifBtn');
-    if (p === 'granted') {
-      btn.textContent = '🔔 Activadas'; btn.style.color = 'var(--green)'; btn.style.borderColor = 'var(--green)';
-      showToast('Notificaciones activadas ✓');
-    } else {
-      showToast('Notificaciones denegadas — revisá la configuración del navegador.');
-    }
+// ══ NOTIFICATIONS ═════════════════════════════════════════════════════
+function requestNotifs(){
+  if(!('Notification'in window)){ showToast('Tu navegador no soporta notificaciones.'); return; }
+  Notification.requestPermission().then(p=>{
+    const btn=document.getElementById('notifBtn');
+    if(p==='granted'){ btn.textContent='🔔 Activas'; btn.style.color='var(--green)'; btn.style.borderColor='rgba(109,189,80,.4)'; showToast('Notificaciones activadas ✓'); }
+    else showToast('Notificaciones denegadas.');
   });
 }
 
-// ══════════════════════════════════════════════════════
-//  SOUND
-// ══════════════════════════════════════════════════════
-function playBeep() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [[660,0,.25],[880,.18,.2]].forEach(([freq,d,vol]) => {
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value=freq; o.type='sine';
-      g.gain.setValueAtTime(vol, ctx.currentTime+d);
-      g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+d+.9);
-      o.start(ctx.currentTime+d); o.stop(ctx.currentTime+d+.9);
+// ══ SOUND ══════════════════════════════════════════════════════════════
+function playBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [[660,0,.22],[880,.18,.18]].forEach(([f,d,v])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';
+      g.gain.setValueAtTime(v,ctx.currentTime+d);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+d+.9);
+      o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+.9);
     });
-  } catch(e){}
+  }catch(e){}
 }
-
-function playChime() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [523.25,659.25,783.99].forEach((freq,i) => {
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value=freq; o.type='sine';
-      const t=ctx.currentTime+i*.12;
-      g.gain.setValueAtTime(.18,t);
-      g.gain.exponentialRampToValueAtTime(.001,t+.7);
-      o.start(t); o.stop(t+.7);
+function playChime(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [523.25,659.25,783.99].forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';
+      const t=ctx.currentTime+i*.13;
+      g.gain.setValueAtTime(.16,t);g.gain.exponentialRampToValueAtTime(.001,t+.7);
+      o.start(t);o.stop(t+.7);
     });
-  } catch(e){}
+  }catch(e){}
 }
-
-function toggleSound() {
+function toggleSound(){
   soundOn=!soundOn;
-  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
-  showToast(soundOn ? 'Sonido activado' : 'Sonido desactivado');
+  document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
+  showToast(soundOn?'Sonido activado':'Sonido desactivado');
 }
 
-// ══════════════════════════════════════════════════════
-//  SETTINGS
-// ══════════════════════════════════════════════════════
-function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); }
-
-function applySettings() {
+// ══ SETTINGS ══════════════════════════════════════════════════════════
+function toggleSettings(){ document.getElementById('settingsPanel').classList.toggle('open'); }
+function applySettings(){
   const cl=(v,mn,mx)=>Math.max(mn,Math.min(mx,isNaN(v)?mn:v));
-  cfg.focus    = cl(parseInt(document.getElementById('focusInput').value),    1,120);
-  cfg.break    = cl(parseInt(document.getElementById('breakInput').value),    1, 60);
-  cfg.longBreak= cl(parseInt(document.getElementById('longBreakInput').value),5, 60);
-  cfg.physical = cl(parseInt(document.getElementById('physInput').value),     1, 15);
-  document.getElementById('focusInput').value    = cfg.focus;
-  document.getElementById('breakInput').value    = cfg.break;
-  document.getElementById('longBreakInput').value= cfg.longBreak;
-  document.getElementById('physInput').value     = cfg.physical;
-  setMode(mode);
-  document.getElementById('settingsPanel').classList.remove('open');
+  cfg.focus    =cl(parseInt(document.getElementById('focusInput').value),    1,120);
+  cfg.break    =cl(parseInt(document.getElementById('breakInput').value),    1, 60);
+  cfg.longBreak=cl(parseInt(document.getElementById('longBreakInput').value),5, 60);
+  cfg.physical =cl(parseInt(document.getElementById('physInput').value),     1, 15);
+  document.getElementById('focusInput').value    =cfg.focus;
+  document.getElementById('breakInput').value    =cfg.break;
+  document.getElementById('longBreakInput').value=cfg.longBreak;
+  document.getElementById('physInput').value     =cfg.physical;
+  setMode(mode); document.getElementById('settingsPanel').classList.remove('open');
   showToast('Tiempos actualizados ✓');
 }
 
-// ══════════════════════════════════════════════════════
-//  TASKS
-// ══════════════════════════════════════════════════════
-function addTask() {
-  const inp=document.getElementById('taskInput'), text=inp.value.trim();
+// ══ TASKS ══════════════════════════════════════════════════════════════
+function addTask(){
+  const inp=document.getElementById('taskInput'),text=inp.value.trim();
   if(!text) return;
-  tasks.push({id:++taskSeq,text,done:false});
-  inp.value=''; renderTasks(); inp.focus();
+  tasks.push({id:++taskSeq,text,done:false}); inp.value=''; renderTasks(); inp.focus();
 }
 function toggleTask(id){const t=tasks.find(t=>t.id===id);if(t){t.done=!t.done;renderTasks();}}
 function deleteTask(id){const i=tasks.findIndex(t=>t.id===id);if(i>-1){tasks.splice(i,1);renderTasks();}}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-function renderTasks() {
-  const list=document.getElementById('taskList');
-  const done=tasks.filter(t=>t.done).length;
+function renderTasks(){
+  const list=document.getElementById('taskList'),done=tasks.filter(t=>t.done).length;
   document.getElementById('taskCounter').textContent=`${done} / ${tasks.length}`;
   if(!tasks.length){list.innerHTML='<div class="empty-msg">Tu lista está vacía.</div>';return;}
   const sorted=[...tasks.filter(t=>!t.done),...tasks.filter(t=>t.done)];
@@ -828,51 +1216,39 @@ function renderTasks() {
     </div>`).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  TIPS
-// ══════════════════════════════════════════════════════
-function renderTips() {
+// ══ TIPS ══════════════════════════════════════════════════════════════
+function renderTips(){
   document.getElementById('tipsList').innerHTML=TIPS.map(t=>`
     <div class="tip-item">
-      <div class="tip-icon-wrap" style="background:${t.bg}">${t.icon}</div>
-      <span class="tip-text">${t.text}</span>
+      <div class="tip-icon-wrap" style="background:${t.bg}">${t.kanji?`<span class="tip-kanji">${t.icon}</span>`:t.icon}</div>
+      <div>
+        ${t.tag?`<div class="tip-tag">${t.tag}</div>`:''}
+        <span class="tip-text">${t.text}</span>
+      </div>
     </div>`).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════════════════
+// ══ TOAST ══════════════════════════════════════════════════════════════
 let toastTimer=null;
 function showToast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg; el.style.opacity='1';
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.style.opacity='0',3500);
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.style.opacity='0',3500);
 }
 
-// ══════════════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════════════
-renderTimerUI();
-renderSessionsDots();
-renderTasks();
-renderMeetings();
-renderTips();
+// ══ INIT ══════════════════════════════════════════════════════════════
+renderTimerUI(); renderSessionsDots(); renderTasks(); renderMeetings(); renderTips();
 
-// Check meetings every 30 seconds
-meetingCheckInterval = setInterval(checkMeetings, 30000);
-
-// Preset meeting time to current time + 5 min as a convenience
+// Pre-fill meeting time
 (function(){
   const n=new Date(); n.setMinutes(n.getMinutes()+5);
   const p=v=>String(v).padStart(2,'0');
   document.getElementById('meetingTime').value=`${p(n.getHours())}:${p(n.getMinutes())}`;
 })();
 
-// Check if notifications already granted
-if('Notification' in window && Notification.permission === 'granted') {
+if('Notification'in window&&Notification.permission==='granted'){
   const btn=document.getElementById('notifBtn');
-  btn.textContent='🔔 Activadas'; btn.style.color='var(--green)'; btn.style.borderColor='var(--green)';
+  btn.textContent='🔔 Activas'; btn.style.color='var(--green)'; btn.style.borderColor='rgba(109,189,80,.4)';
 }
 </script>
 </body>
